@@ -15,10 +15,9 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
-import app
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^player/', include(app.player.urls)),
-    url(r'^card/', include(app.card.urls)),
+    #url(r'^player/', include("app.player.urls")),
+    #url(r'^card/', include("app.card.urls")),
 ]
