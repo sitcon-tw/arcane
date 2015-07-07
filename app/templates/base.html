@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+  <head>
+    <meta charset="utf-8"/>
+    <title>{% block title %} ‧ SITCON 夏令營{% endblock %}</title>
+    <meta name="description" content="SITCON Summer Camp 學生計算機夏令營點數系統。關於學生計算機年會，請前往 http://sitcon.org/，關於學生計算機夏令營，請前往 http://sitcon.camp。" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="shortcut icon" href="{% static 'img/SITCON.ico' %}" />
+    <link rel="apple-touch-icon" href="{% static 'img/apple-touch-icon.png' %}" />
+  </head>
+  <body>
+    {% include "topbar.html" %}
+    {% block content %}
+    {% endblock %}
+    {# insert any js here #}
+  </body>
+</html>
