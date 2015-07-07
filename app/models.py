@@ -21,9 +21,10 @@ class player(models.Model):
     team = models.ForeignKey(team)
     points_acquired = models.IntegerField(name="Acquired Points", verbose_name="The amount of points acquired by this player.", default=0)
     history = HistoricalRecords()
+    secret = models.CharField(max_length=16, primary_key=True, default=get_random_string(16))
 
     def __str__(self):
-        return self.user.get_full_name() + " (" + self.user.get_username() + "), acquired " + self.points_acquired + " points for " + self.team.name + ", which currently has " + self.team.points + " points."
+        return self.user.get_full_name() + " (" + self.user.get_username() + "), acquired " + self.points_acquired + " points for " + self.team.name + ", which currently has " + self.team.points + " points. \n The registration token for this player is: " + self.secret + " ."
 
 class card(models.Model):
     cid = models.CharField(max_length=16, primary_key=True, default=get_random_string(16))
