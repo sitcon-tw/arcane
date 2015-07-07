@@ -7,8 +7,8 @@ from simple_history.models import HistoricalRecords
 alphanumeric = RegexValidator(r'^[0-9a-zA-Z]*$', 'Only alphanumeric characters are allowed.')
 
 class team(models.Model):
-    tid = models.CharField(max_length=32, validators=[alphanumeric], primary_key=True, verbose_name="Team ID", help_text="Alphanumeric ID for the team.")
-    verbose_name = models.CharField(max_length=32, null=True, name="Name", help_text="Name of the team.")
+    tid = models.CharField(max_length=32, validators=[alphanumeric], primary_key=True, verbose_name="Team ID", help_text="Alphanumeric name for the team.")
+    name = models.CharField(max_length=32, null=True, name="Name", help_text="Name of the team.")
     points = models.IntegerField(verbose_name="Points", help_text="The current amount of points of this group.", default=0)
     history = HistoricalRecords()
 
