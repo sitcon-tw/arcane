@@ -7,29 +7,29 @@ from simple_history.models import HistoricalRecords
 alphanumeric = RegexValidator(r'^[0-9a-zA-Z]*$', 'Only alphanumeric characters are allowed.')
 
 class team(models.Model):
-    tid = models.CharField(max_length=32, validators=[alphanumeric], primary_key=True)
-    name = models.CharField(max_length=32, null=True)
-    points = models.IntegerField(name="Points", verbose_name="The current amount of points of this group.", default=0)
+    tid = models.CharField(max_length=32, validators=[alphanumeric], primary_key=True, verbose_name="Team ID", help_text="Alphanumeric ID for the team.")
+    verbose_name = models.CharField(max_length=32, null=True, name="Name", help_text="Name of the team.")
+    points = models.IntegerField(verbose_name="Points", help_text="The current amount of points of this group.", default=0)
     history = HistoricalRecords()
 
     def __str__(self):
-        return self.name + ", currently has " + self.points + " points."
+        return self.verbose_name + ", currently has " + self.points + " points."
 
 
 class player(models.Model):
-    user = models.OneToOneField(User)
-    team = models.ForeignKey(team)
-    points_acquired = models.IntegerField(name="Acquired Points", verbose_name="The amount of points acquired by this player.", default=0)
+    user = models.OneToOneField(User, verbose_name="User", help_text="The user of this player.")
+    team = models.ForeignKey(team, verbose_name="Team", help_text="The team this player belongs to.")
+    points_acquired = models.IntegerField(verbose_name="Acquired Points", help_text="The amount of points acquired by this player.", default=0)
+    secret = models.CharField(max_length=16, primary_key=True, default=get_random_string(16), verbose_name="Reg. Token", help_text="A token used to simplify the process of registration.")
     history = HistoricalRecords()
-    secret = models.CharField(max_length=16, primary_key=True, default=get_random_string(16))
 
     def __str__(self):
-        return self.user.get_full_name() + " (" + self.user.get_username() + "), acquired " + self.points_acquired + " points for " + self.team.name + ", which currently has " + self.team.points + " points. \n The registration token for this player is: " + self.secret + " ."
+        return self.user.get_full_verbose_name() + " (" + self.user.get_username() + "), acquired " + self.points_acquired + " points for " + self.team.name + ", which currently has " + self.team.points + " points. \n The registration token for this player is: " + self.secret + " ."
 
 class card(models.Model):
-    cid = models.CharField(max_length=16, primary_key=True, default=get_random_string(16))
-    value = models.IntegerField("The value of the points card.", "value", default="1")
-    active = models.BooleanField(default=True)
+    cid = models.CharField(max_length=16, primary_key=True, default=get_random_string(16), verbose_name="Card ID", help_text="The unique ID for the points card.")
+    value = models.IntegerField(default="1", verbose_name="Value", help_text="The value of the points card.")
+    active = models.BooleanField(default=True, verbose_name="Active?")
     history = HistoricalRecords()
 
     def __str__(self):
