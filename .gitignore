@@ -49,6 +49,8 @@ coverage.xml
 
 # Django stuff:
 *.log
+assets
+assets/*
 
 # Sphinx documentation
 docs/_build/
@@ -64,3 +66,4 @@ db.sqlite3
 
 # will remove after it's released
 app/migrations/
+

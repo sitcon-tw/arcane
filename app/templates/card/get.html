@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% block title %}點數卡{% endblock %}
+
+{% block content %}
+<h1>恭喜獲得點數卡</h1>
+<h2>{{ card.name }}</h2>
+<p>{{ card.long_desc }}</p>
+<a href="/card/get/{{ card.cid }}" style="appearance: button">取得</a>
+{% endblock %}
