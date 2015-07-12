@@ -10,6 +10,7 @@ class team(models.Model):
     tid = models.CharField(max_length=32, validators=[alphanumeric], primary_key=True, verbose_name="Team ID", help_text="Alphanumeric name for the team.")
     name = models.CharField(max_length=32, null=True, name="Name", help_text="Name of the team.")
     points = models.IntegerField(verbose_name="Points", help_text="The current amount of points of this group.", default=0)
+    modified_reason = models.TextField(verbose_name="Modified Reason", help_text="The reason of last modification.", null=True)
     history = HistoricalRecords()
 
     def __str__(self):
@@ -21,6 +22,7 @@ class player(models.Model):
     team = models.ForeignKey(team, verbose_name="Team", help_text="The team this player belongs to.")
     points_acquired = models.IntegerField(verbose_name="Acquired Points", help_text="The amount of points acquired by this player.", default=0)
     secret = models.CharField(max_length=16, primary_key=True, default=get_random_string(16), verbose_name="Reg. Token", help_text="A token used to simplify the process of registration.")
+    modified_reason = models.TextField(verbose_name="Modified Reason", help_text="The reason of last modification.", null=True)
     history = HistoricalRecords()
 
     def __str__(self):
