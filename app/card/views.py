@@ -3,6 +3,7 @@ from django.http import HttpResponseNotFound, HttpResponse
 from app.models import Card
 from app.card.forms import CardForm
 from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import PermissionDenied
 
 
 def card(request, id=None):
@@ -39,5 +40,21 @@ def get(request, id=None):
     pass
 
 
-def gen(request, id=None):
-    pass
+def gen(request):
+    if request.user.is_staff:
+        if not request.POST:
+            form = CardForm()
+            return render(request, "card/generate.html", locals())
+        else:
+            form = CardForm(request.POST)
+            if form.is_valid():
+                card = Card()
+                card.name = form.cleaned_data["name"]
+                card.value = form.cleaned_data["value"]
+                card.long_desc = form.cleaned_data["long_desc"]
+                card.active = form.cleaned_data["active"]
+                card.modified_reason = form.cleaned_data["modified_reason"]
+                card.save()
+            return HttpResponse("<h1>Submitted.</h1><meta http-equiv=\"refresh\" content=\"3; url=/card/" + card.cid + "\">")
+    else:
+        raise PermissionDenied
