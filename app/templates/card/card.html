@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}點數卡{% endblock %}
+
+{% block content %}
+<h1>點數卡 <span style="font-size:25px">{{ card.name }}</span></h1>
+<p style="font-size:25px">{{ card.cid }}</p>
+<p style="font-size:32px">{{ card.value }} <span style="font-size:20px">點</span></p>
+<p style="font-size:20px">
+  {% if card.active and not card.retrieved %}
+  已啟用，尚未被領取
+  {% elif not card.active and not card.retrieved %}
+  尚未啟用
+  {% else %}
+  已被領取
+  {% endif %}
+</p>
+{% if card.retrieved %}
+<h2>提領者：{{ card.modified_reason }}</h2>
+{% endif %}
+
+<img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data={{ get_url }}" />
+
+{% autoescape off %}<p>{{ card.long_desc }}</p> {% endautoescape %}
+
+<input type="button" onclick="location.href='/card/edit/{{ card.cid }}'" value="編輯" />
+{% endblock %}

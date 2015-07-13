@@ -4,5 +4,3 @@
 {% block content %}
 <h1>{{ team.name }} <span style="font-size:25px">{{ user.get_full_name }}</span></h1>
 <p style="font-size:32px">{{ team.points }} <span style="font-size:20px">點</span></p>
-{% if is_staff %}<a href="/player/edit/{{ player.name }}" style="appearance: button; -moz-appearance: button; -webkit-appearance: button">異動</a>{% endif %} <!-- 要加顏色(# -->
-{% endblock %}
