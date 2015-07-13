@@ -4,6 +4,7 @@
 {% block content %}
 <h1>恭喜獲得點數卡</h1>
 <h2>{{ card.name }}</h2>
-<p>{{ card.long_desc }}</p>
-<a href="/card/get/{{ card.cid }}" style="appearance: button; -moz-appearance: button; -webkit-appearance: button">取得</a>
+<p>{% autoescape off %}{{ card.long_desc }}{% endautoescape %}</p>
+
+<form action="/card/get/{{ card.cid }}" method="post">{% csrf_token %}<input type="submit" value="取得" /></form>
 {% endblock %}
