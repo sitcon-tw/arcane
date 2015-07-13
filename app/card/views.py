@@ -1,12 +1,11 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponseNotFound, HttpResponse
-from app.models import card as Card
+from app.models import Card
 from app.card.forms import CardForm
 from django.core.exceptions import ObjectDoesNotExist
-import re
 
-def card(request):
-    id = re.sub(r'/',"",re.sub(r'/card/',"", request.path)) # 我就是要用骯髒解你管我
+
+def card(request, id=None):
     try:
         card = Card.objects.get(cid=id)
     except ObjectDoesNotExist:
@@ -14,8 +13,8 @@ def card(request):
     get_url = "http://" + request.META['HTTP_HOST'] + "/card/get/" + card.cid
     return render(request, "card/card.html", locals())
 
-def edit(request):
-    id = re.sub(r'/',"",re.sub(r'/card/edit/',"", request.path)) # 我就是要用骯髒解你管我
+
+def edit(request, id=None):
     try:
         card = Card.objects.get(cid=id)
     except ObjectDoesNotExist:
@@ -35,9 +34,10 @@ def edit(request):
             card.save()
         return HttpResponse("<h1>Submitted.</h1><meta http-equiv=\"refresh\" content=\"3; url=/card/" + card.cid + "\">")
 
-def get(request):
+
+def get(request, id=None):
     pass
 
-def gen(request):
-    pass
 
+def gen(request, id=None):
+    pass
