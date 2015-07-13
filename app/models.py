@@ -14,7 +14,7 @@ class team(models.Model):
     history = HistoricalRecords()
 
     def __str__(self):
-        return self.verbose_name + ", currently has " + self.points + " points."
+        return str(self.verbose_name) + ", currently has " + str(self.points) + " points."
 
 
 class player(models.Model):
@@ -26,7 +26,7 @@ class player(models.Model):
     history = HistoricalRecords()
 
     def __str__(self):
-        return self.user.get_full_verbose_name() + " (" + self.user.get_username() + "), acquired " + self.points_acquired + " points for " + self.team.name + ", which currently has " + self.team.points + " points. \n The registration token for this player is: " + self.secret + " ."
+        return str(self.user.get_full_verbose_name()) + " (" + str(self.user.get_username()) + "), acquired " + str(self.points_acquired) + " points for " + str(self.team.name) + ", which currently has " + str(self.team.points) + " points. \n The regiunicodeation token for this player is: " + str(self.secret) + " ."
 
 class card(models.Model):
     cid = models.CharField(max_length=16, primary_key=True, default=get_random_string(16), verbose_name="Card ID", help_text="The unique ID for the points card.")
@@ -40,6 +40,6 @@ class card(models.Model):
 
     def __str__(self):
         if self.active:
-            return "An active points card with " + self.value + " points, with the cid: \"" + self.cid + "\" ."
+            return str(self.name) + ", an active points card with " + str(self.value) + " points, with the cid: \"" + str(self.cid) + "\" ."
         else:
-            return "An inactive points card with " + self.value + " points, with the cid: \"" + self.cid + "\" ."
+            return str(self.name) + ", an inactive points card with " + str(self.value) + " points, with the cid: \"" + str(self.cid) + "\" ."
