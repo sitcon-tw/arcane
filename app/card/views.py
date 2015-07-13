@@ -16,6 +16,8 @@ def card(request, id=None):
 
 
 def edit(request, id=None):
+    if not request.user.is_staff:
+        raise PermissionDenied
     try:
         card = Card.objects.get(cid=id)
     except ObjectDoesNotExist:
