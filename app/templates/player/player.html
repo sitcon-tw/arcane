@@ -1,8 +1,9 @@
 {% extends 'base.html' %}
-{% block title %}{{ team.name }}{% endblock %}
+{% block title %}{{ player.team.name }}{% endblock %}
 
 {% block content %}
-<h1>{{ team.name }} <span style="font-size:25px">{{ user.get_full_name }}</span></h1>
-<p style="font-size:32px">{{ team.points }} <span style="font-size:20px">點</span></p>
+<h1>{{ player.team.name }} <span style="font-size:25px">{{ user.get_full_name }}</span></h1>
+<p style="font-size:32px">{{ player.team.points }} <span style="font-size:20px">點</span></p>
+<p style="font-size:20px">（{{ player.points_acquired }} 點是這個玩家要來的）</p>
 
 {% endblock %}

@@ -1,5 +1,4 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponseNotFound, HttpResponse
 from django.core.exceptions import PermissionDenied, ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required
 from app.models import Card, is_player
@@ -43,19 +42,22 @@ def edit(request, id=None):
 def get(request):
     id = re.sub(r'/',"",re.sub(r'/card/get/',"", request.path))
 
-    try:
-        card = Card.objects.get(cid=id)
-    except ObjectDoesNotExist:
-        return render(request, "submit.html", {"content":"<h1>Wrong card</h1><meta http-equiv=\"refresh\" content=\"3; url=/\">", "title":"錯誤！"}, status=404)
-
-    if not request.POST:
-        form = CardForm({"name": card.name, "value": card.value, "long_desc": card.long_desc, "active": card.active, "retrieved": card.retrieved, "modified_reason": ""})
-        return render(request, "card/get.html", locals())
+    if not is_player(request.user):
+        raise PermissionDenied
     else:
-        if is_player(request.user):
-            return render(request, "submit.html", {"content":"<h1>Submitted.</h1><meta http-equiv=\"refresh\" content=\"3; url=\"/\">"})
+        try:
+            card = Card.objects.get(cid=id)
+        except ObjectDoesNotExist:
+            return render(request, "submit.html", {"content":"<h1>Wrong card</h1><meta http-equiv=\"refresh\" content=\"3; url=/\">", "title":"錯誤！"}, status=404)
+
+        if not request.POST:
+            form = CardForm({"name": card.name, "value": card.value, "long_desc": card.long_desc, "active": card.active, "retrieved": card.retrieved, "modified_reason": ""})
+            return render(request, "card/get.html", locals())
         else:
-            return redirect("/card/" + id)
+            if is_player(request.user):
+                return render(request, "submit.html", {"content":"<h1>Submitted.</h1><meta http-equiv=\"refresh\" content=\"3; url=\"/\">"})
+            else:
+                return redirect("/card/" + id)
 
 def gen(request):
     if request.user.is_staff:
