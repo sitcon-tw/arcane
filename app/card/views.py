@@ -72,6 +72,6 @@ def gen(request):
                 card.active = form.cleaned_data["active"]
                 card.modified_reason = form.cleaned_data["modified_reason"]
                 card.save()
-            return render(request,"submit.html", {"content":"<h1>Submitted.</h1><meta http-equiv=\"refresh\" content=\"3; url=/card/" + card.cid + "\">"}
+            return render(request,"submit.html", {"content":"<h1>Submitted.</h1><meta http-equiv=\"refresh\" content=\"3; url=/card/" + card.cid + "\">"})
     else:
         raise PermissionDenied
