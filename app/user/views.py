@@ -9,3 +9,6 @@ def chgpin(request):
 
 def chgname(request):
     pass
+
+def staff_login(request):
+    pass

@@ -44,3 +44,10 @@ class Card(models.Model):
             return str(self.name) + " (" + str(self.cid) + "), retrieved, " + str(self.value) + " points."
         else:
             return str(self.name) + " (" + str(self.cid) + "), inactive, " + str(self.value) + " points."
+
+def is_player(user):
+    try:
+        if user.player:
+            return True
+    except AttributeError:
+        return False
