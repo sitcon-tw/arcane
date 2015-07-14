@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from app.models import Card, is_player
 from app.card.forms import CardForm
 
+
 def card(request, id=None):
     if not request.user.is_staff:
         raise PermissionDenied
@@ -14,6 +15,7 @@ def card(request, id=None):
             return render(request, "submit.html", {"content":"<h1>Wrong card</h1><meta http-equiv=\"refresh\" content=\"3; url=/\">", "title":"錯誤！"}, status=404)
         get_url = "http://" + request.META['HTTP_HOST'] + "/card/get/" + card.cid
         return render(request, "card/card.html", locals())
+
 
 def edit(request, id=None):
     if not request.user.is_staff:
@@ -38,10 +40,9 @@ def edit(request, id=None):
                 card.save()
             return render(request, "submit.html", {"content": "<h1>Submitted.</h1><meta http-equiv=\"refresh\" content=\"3; url=/card/" + card.cid + "\">"})
 
-@login_required(login_url="/user/login")
-def get(request):
-    id = re.sub(r'/',"",re.sub(r'/card/get/',"", request.path))
 
+@login_required(login_url="/user/login")
+def get(request, id):
     if not is_player(request.user):
         raise PermissionDenied
     else:
@@ -57,7 +58,8 @@ def get(request):
             if is_player(request.user):
                 return render(request, "submit.html", {"content":"<h1>Submitted.</h1><meta http-equiv=\"refresh\" content=\"3; url=\"/\">"})
             else:
-                return redirect("/card/" + id)
+                return redirect("get card", id=id)
+
 
 def gen(request):
     if request.user.is_staff:
