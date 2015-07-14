@@ -1,9 +1,9 @@
-from django.conf.urls import include, url
+from django.conf.urls import url
 
 
 urlpatterns = [
-    url(r'^\w{16}$', "app.card.views.card", name="view card"),
-    url(r'^generate/\w{16}$', "app.card.views.gen", name="generate card"),
-    url(r'^get/\w{16}$', "app.card.views.get", name="get"),
-    url(r'^edit/\w{16}$', "app.card.views.edit", name="edit card")
+    url(r'^generate/$', "app.card.views.gen", name="generate card"),
+    url(r'^get/(?P<id>\w{16})$', "app.card.views.get", name="get"),
+    url(r'^edit/(?P<id>\w{16})$', "app.card.views.edit", name="edit card"),
+    url(r'^(?P<id>\w{16})$', "app.card.views.card", name="view card"),
 ]

@@ -3,7 +3,7 @@
 
 {% block content %}
 <h1>編輯點數卡</h1>
-<form action="/card/edit/{{ card.cid }}" method="post">
+<form action="{% url 'edit card' card.cid %}" method="post">
   {% csrf_token %}
   {{ form.as_p }}
   <input type="submit" value="送出"/>

@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block title %}編輯點數卡{% endblock %}
+
+{% block content %}
+<h1>編輯點數卡</h1>
+<form action="{% url 'generate card'%}" method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <input type="submit" value="送出"/>
+</form>
+{% endblock %}

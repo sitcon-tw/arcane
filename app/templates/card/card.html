@@ -22,5 +22,7 @@
 
 {% autoescape off %}<p>{{ card.long_desc }}</p> {% endautoescape %}
 
-<input type="button" onclick="location.href='/card/edit/{{ card.cid }}'" value="編輯" />
+{% if request.user.is_staff %}
+    <input type="button" onclick="location.href='{% url "edit card" card.cid %}'" value="編輯" />
+{% endif %}
 {% endblock %}

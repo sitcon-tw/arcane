@@ -26,14 +26,15 @@ class Player(models.Model):
     def __str__(self):
         return str(self.user.get_full_name()) + " (" + str(self.user.get_username()) + "), " + self.team.name
 
+
 class Card(models.Model):
     cid = models.CharField(max_length=16, primary_key=True, default=get_random_string(16), verbose_name="Card ID", help_text="The unique ID for the points card.")
     value = models.IntegerField(default="1", verbose_name="Value", help_text="The value of the points card.")
     active = models.BooleanField(default=True, verbose_name="Active?")
     retrieved = models.BooleanField(default=False, verbose_name="Retrieved")
-    name = models.CharField(max_length=32, verbose_name="Name", help_text="Name of the card.", null=True)
-    long_desc = models.TextField(verbose_name="Descriptions", help_text="Long descriptions about the card.", null=True)
-    modified_reason = models.TextField(verbose_name="Modified Reason", help_text="The reason of last modification.", null=True)
+    name = models.CharField(max_length=32, verbose_name="Name", help_text="Name of the card.", null=True, blank=True)
+    long_desc = models.TextField(verbose_name="Descriptions", help_text="Long descriptions about the card.", null=True, blank=True)
+    modified_reason = models.TextField(verbose_name="Modified Reason", help_text="The reason of last modification.", null=True, blank=True)
     history = HistoricalRecords()
 
     def __str__(self):
