@@ -47,10 +47,15 @@ coverage.xml
 *.mo
 *.pot
 
+# virtualenv
+venv
+
 # Django stuff:
 *.log
 static
 static/*
+db.sqlite3
+secret_key.py
 
 # Sphinx documentation
 docs/_build/
@@ -58,7 +63,6 @@ docs/_build/
 # PyBuilder
 target/
 
-db.sqlite3
 
 # vim
 *.swp

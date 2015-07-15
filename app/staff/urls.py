@@ -1,5 +1,5 @@
 from django.conf.urls import url
 
-urlpatterns =[
+urlpatterns = [
     url(r'^', "app.staff.views.dashboard", name="dashboard"),
 ]

@@ -1,6 +1,6 @@
 from django.conf.urls import url
 
-urlpatterns =[
+urlpatterns = [
     url(r'^chgpin$', "app.user.views.chgpin", name="change user pin"),
     url(r'^chgname$', "app.user.views.chgname", name="change user name"),
     url(r'^login/(?P<id>\w+)$', "app.user.views.login", name="login"),

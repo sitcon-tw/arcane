@@ -1,14 +1,18 @@
-from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
-from django.core.exceptions import PermissionDenied, ObjectDoesNotExist
-from django.contrib.auth.models import User
 from app.models import Player, is_player, Card
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
+from django.shortcuts import redirect, render
 
 
 def player(request, id=None):
     if not request.user.is_authenticated():
         if not User.objects.filter(username=id).exists():
-            return render(request, "submit.html", {"content":"<h1>Wrong user</h1><meta http-equiv=\"refresh\" content=\"3; url=/\">", "title":"錯誤！"}, status=404)
+            return render(
+                request, "submit.html", {
+                    "content": ("<h1>Wrong user</h1>"
+                               "<meta http-equiv=\"refresh\" content=\"3; url=/\">"),
+                    "title": "錯誤！"}, status=404)
         return redirect("login", id)
     else:
         if not id:
@@ -22,6 +26,8 @@ def player(request, id=None):
             return render(request, 'player/player.html', {"user": user})
 
 
+"""
+# Edit Player Function, will implement if requested
 @login_required
 def edit(request, id=None):
     if not request.user.is_staff:
@@ -30,12 +36,23 @@ def edit(request, id=None):
         try:
             user = User.objects.get(username=id)
         except ObjectDoesNotExist:
-            return render(request, "submit.html", {"content":"<h1>Wrong user</h1><meta http-equiv=\"refresh\" content=\"3; url=/\">", "title":"錯誤！"}, status=404)
+            return render(
+                request, "submit.html", {
+                    "content":("<h1>Wrong user</h1>"
+                               "<meta http-equiv=\"refresh\" content=\"3; url=/\">"),
+                    "title":"錯誤！"}, status=404)
         if not is_player(user):
-            return render(request, "submit.html", {"content":"<h1>Wrong user</h1><meta http-equiv=\"refresh\" content=\"3; url=/\">", "title":"錯誤！"}, status=404)
+            return render(
+                request, "submit.html", {
+                    "content":("<h1>Wrong user</h1>"
+                               "<meta http-equiv=\"refresh\" content=\"3; url=/\">"),
+                    "title":"錯誤！"}, status=404)
         else:
             if not request.POST:
-                form = PlayerForm({"name": user.username, "value": card.value, "long_desc": card.long_desc, "active": card.active, "retrieved": card.retrieved, "modified_reason": ""})
+                form = PlayerForm({
+                    "name": user.username,
+                    ""
+                    "modified_reason": ""})
                 return render(request, "card/edit.html", locals())
             else:
                 form = CardForm(request.POST)
@@ -47,4 +64,9 @@ def edit(request, id=None):
                     card.active = form.cleaned_data["active"]
                     card.modified_reason = form.cleaned_data["modified_reason"]
                     card.save()
-                return render(request, "submit.html", {"content": "<h1>Submitted.</h1><meta http-equiv=\"refresh\" content=\"3; url=/card/" + card.cid + "\">"})
+                return render(
+                    request, "submit.html", {
+                        "content":("<h1>Submitted.</h1>"
+                                   "<meta http-equiv=\"refresh\" content=\"3; "
+                                   "url=/card/" + card.cid + "\">")})
+"""
