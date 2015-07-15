@@ -5,6 +5,7 @@ from app.models import Card, is_player
 from app.card.forms import CardForm
 
 
+@login_required
 def card(request, id=None):
     if not request.user.is_staff:
         raise PermissionDenied
@@ -17,6 +18,7 @@ def card(request, id=None):
         return render(request, "card/card.html", locals())
 
 
+@login_required
 def edit(request, id=None):
     if not request.user.is_staff:
         raise PermissionDenied
@@ -41,7 +43,7 @@ def edit(request, id=None):
             return render(request, "submit.html", {"content": "<h1>Submitted.</h1><meta http-equiv=\"refresh\" content=\"3; url=/card/" + card.cid + "\">"})
 
 
-@login_required(login_url="/user/login")
+@login_required
 def get(request, id):
     if not is_player(request.user):
         raise PermissionDenied
@@ -61,6 +63,7 @@ def get(request, id):
                 return redirect("get card", id=id)
 
 
+@login_required
 def gen(request):
     if request.user.is_staff:
         if not request.POST:
