@@ -1,0 +1,2 @@
+def dashboard(request):
+    pass
