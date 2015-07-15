@@ -3,9 +3,12 @@ from django.contrib.auth import login as auth_login
 from django.contrib.auth import views as auth_view
 from django.contrib.auth import authenticate
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib.auth.views import password_change
 from django.contrib.auth.models import User
 from django.shortcuts import redirect, render
+
+from app.user.forms import PasswordChangeForm
+# from app.user.forms import PasswordChangeForm
 
 
 def login(request, id=None):
@@ -45,8 +48,8 @@ def logout(request):
 def chgpin(request):
     if not request.user.is_authenticated():
         return redirect('home')
-    if request.method == 'GET':
-        return render(request, 'user/chgpin.html', {"form": PasswordChangeForm(request.user)})
+    return password_change(request, template_name='user/chgpin.html',
+                           post_change_redirect='home', password_change_form=PasswordChangeForm)
 
 
 def chgname(request):

@@ -4,6 +4,9 @@
 {% block content %}
 <form action="{% url 'change user pin' %}" method="post">
   {% csrf_token %}
-  {{ form.as_p }}
+  <p>舊密碼：{{ form.old_password }}</p>
+  <p>新密碼：{{ form.new_password1 }}</p>
+  <p>再一次：{{ form.new_password2 }}</p>
+  <input type="submit" value="修改"/>
 </form>
 {% endblock %}
