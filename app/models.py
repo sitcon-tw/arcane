@@ -16,7 +16,8 @@ class Team(models.Model):
 
 
 class Player(models.Model):
-    user = models.OneToOneField(User, verbose_name="User", help_text="The user of this player.")
+    id = models.AutoField(primary_key=True)
+    user = models.OneToOneField(User, verbose_name="User", help_text="The user of this player.", related_name="player")
     team = models.ForeignKey(Team, verbose_name="Team", help_text="The team this player belongs to.")
     points_acquired = models.IntegerField(verbose_name="Acquired Points", help_text="The amount of points acquired by this player.", default=0)
     modified_reason = models.TextField(verbose_name="Modified Reason", help_text="The reason of last modification.", null=True)
@@ -44,9 +45,6 @@ class Card(models.Model):
         else:
             return str(self.name) + " (" + str(self.cid) + "), inactive, " + str(self.value) + " points."
 
+
 def is_player(user):
-    try:
-        if user.player:
-            return True
-    except:
-        return False
+    return not user.is_staff
