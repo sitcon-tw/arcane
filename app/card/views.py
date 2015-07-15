@@ -43,7 +43,7 @@ def edit(request, id=None):
             return render(request, "submit.html", {"content": "<h1>Submitted.</h1><meta http-equiv=\"refresh\" content=\"3; url=/card/" + card.cid + "\">"})
 
 
-def get(request):
+def get(request, id=None):
     if not is_player(request.user):
         raise PermissionDenied
     else:
@@ -57,6 +57,7 @@ def get(request):
             return render(request, "card/get.html", locals())
         else:
             if is_player(request.user):
+                # Add points
                 return render(request, "submit.html", {"content":"<h1>Submitted.</h1><meta http-equiv=\"refresh\" content=\"3; url=\"/\">"})
             else:
                 return redirect("/card/" + id)
