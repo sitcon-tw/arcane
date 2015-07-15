@@ -1,5 +1,5 @@
-from django.shortcuts import render, redirect
 from app.models import is_player
+from django.shortcuts import redirect, render
 
 
 def home(request):

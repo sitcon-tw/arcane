@@ -27,7 +27,11 @@ try:
     from secret_key import *
 except ImportError:
     f = open('secret_key.py', 'w')
-    f.write('SECRET_KEY = \"' + ''.join(random.choice(")<$`['|*}(,.#=%-^*]!_&~;+>@{" + "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789") for _ in range(random.randint(45,50))) + "\"\n")
+    f.write('SECRET_KEY = \"'
+            + ''.join(random.choice(")<$`['|*}(,.#=%-^*]!_&~;+>@{" +
+                                    "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+                                   )
+                      for _ in range(random.randint(45, 50))) + "\"\n")
     f.close()
     from secret_key import *
 
