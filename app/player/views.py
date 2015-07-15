@@ -2,7 +2,9 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied, ObjectDoesNotExist
 from django.contrib.auth.models import User
+from django.core.exceptions import ObjectDoesNotExist
 from app.models import Player, is_player
+
 
 def player(request, id=None):
     if not request.user.is_authenticated():
@@ -10,7 +12,7 @@ def player(request, id=None):
             user = User.objects.get(username=id)
         except ObjectDoesNotExist:
             return render(request, "submit.html", {"content":"<h1>Wrong user</h1><meta http-equiv=\"refresh\" content=\"3; url=/\">", "title":"錯誤！"}, status=404)
-        return redirect("/user/login/" + id)
+        return redirect("login", id)
     else:
         no_id = False
         try:

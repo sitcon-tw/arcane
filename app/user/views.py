@@ -2,8 +2,13 @@ from django.contrib.auth import views as auth_view
 from django.contrib.auth import authenticate
 from django.contrib.auth import login as login_function
 from django.contrib.auth.models import User
-from django.core.exceptions import PermissionDenied, ObjectDoesNotExist
+from django.core.exceptions import ObjectDoesNotExist
+from django.contrib.auth import login as auth_login
+from django.contrib.auth import authenticate
 from django.shortcuts import render, redirect
+from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib.auth.decorators import login_required
+
 from app.user.forms import LoginForm
 
 
@@ -33,16 +38,25 @@ def login(request, id=None):
             else:
                 return redirect('login', id)
         else:
-            return redirect('login', id)
+            error = "錯誤的PIN碼"
+            return render(request, "user/login.html", locals())
+
 
 def logout(request):
     return auth_view.logout_then_login(request, 'home')
 
+
+@login_required
 def chgpin(request):
-    pass
+    if not request.user.is_authenticated():
+        return redirect('home')
+    if request.method == 'GET':
+        return render(request, 'user/chgpin.html', {"form": PasswordChangeForm()})
+
 
 def chgname(request):
     pass
+
 
 def staff_login(request):
     if request.user.is_authenticated():
