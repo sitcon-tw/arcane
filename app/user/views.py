@@ -38,7 +38,8 @@ def login(request, id=None):
             else:
                 return redirect('login', id)
         else:
-            return redirect('login', id)
+            error = "錯誤的PIN碼"
+            return render(request, "user/login.html", locals())
 
 
 def logout(request):
