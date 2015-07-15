@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied, ObjectDoesNotExist
 from django.contrib.auth.models import User
-from django.contrib.exception import ObjectDoesNotExist
+from django.core.exceptions import ObjectDoesNotExist
 from app.models import Player, is_player
 
 
