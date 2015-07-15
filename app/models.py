@@ -48,5 +48,5 @@ def is_player(user):
     try:
         if user.player:
             return True
-    except AttributeError:
+    except:
         return False
