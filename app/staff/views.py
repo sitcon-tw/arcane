@@ -1,2 +1,5 @@
+from django.http import HttpResponse
+
+
 def dashboard(request):
-    pass
+    return HttpResponse("dashboard")

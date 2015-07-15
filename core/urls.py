@@ -17,9 +17,10 @@ from django.conf.urls import include, url
 from django.contrib import admin
 
 urlpatterns = [
-    url(r'^$', "app.views.home"),
+    url(r'^$', "app.views.home", name="home"),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^player/', include("app.player.urls")),
     url(r'^card/', include("app.card.urls")),
-    url(r'^user/', include("app.user.urls"))
+    url(r'^user/', include("app.user.urls")),
+    url(r'^staff/', include("app.staff.urls")),
 ]
