@@ -42,12 +42,11 @@ def logout(request):
     return auth_view.logout_then_login(request, 'home')
 
 
-@login_required
 def chgpin(request):
     if not request.user.is_authenticated():
         return redirect('home')
     if request.method == 'GET':
-        return render(request, 'user/chgpin.html', {"form": PasswordChangeForm()})
+        return render(request, 'user/chgpin.html', {"form": PasswordChangeForm(request.user)})
 
 
 def chgname(request):

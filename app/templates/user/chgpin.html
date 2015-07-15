@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% block title %}Change PIN{% endblock %}
+
+{% block content %}
+<form action="{% url 'change user pin' %}" method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+</form>
+{% endblock %}
