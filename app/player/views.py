@@ -2,32 +2,25 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied, ObjectDoesNotExist
 from django.contrib.auth.models import User
-from django.core.exceptions import ObjectDoesNotExist
-from app.models import Player, is_player
+from app.models import Player, is_player, Card
 
 
 def player(request, id=None):
     if not request.user.is_authenticated():
-        try:
-            user = User.objects.get(username=id)
-        except ObjectDoesNotExist:
+        if not User.objects.filter(username=id).exists():
             return render(request, "submit.html", {"content":"<h1>Wrong user</h1><meta http-equiv=\"refresh\" content=\"3; url=/\">", "title":"錯誤！"}, status=404)
         return redirect("login", id)
     else:
-        no_id = False
-        try:
-            user = User.objects.get(username=id)
-        except ObjectDoesNotExist:
-            no_id = True
-
-        if request.user.is_staff and not no_id:
-            player = user.player
-            return render(request, 'player/player.html', locals())
-        elif is_player(request.user):
-            user = request.user
-            return render(request, 'player/player.html', locals())
+        if not id:
+# rediect logged-in user to /player/<username>
+            return redirect('player data', request.user.username)
+        if request.user.is_staff:
+# ban staff
+            raise PermissionDenied
         else:
-            return render(request, "submit.html", {"content":"<h1>Wrong user</h1><meta http-equiv=\"refresh\" content=\"3; url=/\">", "title":"錯誤！"}, status=404)
+            user = request.user
+            return render(request, 'player/player.html', {"user": user})
+
 
 @login_required
 def edit(request, id=None):
@@ -47,6 +40,7 @@ def edit(request, id=None):
             else:
                 form = CardForm(request.POST)
                 if form.is_valid():
+                    card = Card()
                     card.name = form.cleaned_data["name"]
                     card.value = form.cleaned_data["value"]
                     card.long_desc = form.cleaned_data["long_desc"]
