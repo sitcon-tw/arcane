@@ -15,28 +15,20 @@ from app.user.forms import LoginForm
 def login(request, id=None):
     if request.user.is_authenticated():
         return redirect('home')
-    else:
-        try:
-            user = User.objects.get(username=id)
-        except ObjectDoesNotExist:
-            return render(request, "submit.html", {"content":"<h1>Wrong user</h1><meta http-equiv=\"refresh\" content=\"3; url=/\">", "title":"錯誤！"}, status=404)
-
     if not request.POST:
-        form = LoginForm
+        form = LoginForm()
         return render(request, "user/login.html", locals())
     else:
         username = id
-        form = LoginForm(request.POST)
-        if form.is_valid():
-            user = authenticate(username=user.username, password=form.cleaned_data["password"])
-            if user is not None:
-                if user.is_active:
-                    login_function(request, user)
-                    return redirect('home')
-                else:
-                    return render(request, "submit.html", {"content":"<h1>Wrong user</h1><meta http-equiv=\"refresh\" content=\"3; url=/\">", "title":"錯誤！"}, status=404)
+        password = request.POST.get("password", '')
+        user = authenticate(username=username, password=password)
+        if user is not None:
+            if user.is_active:
+                login_function(request, user)
+                return redirect('home')
             else:
-                return redirect('login', id)
+                error = "奇怪的錯誤"
+                return render(request, "user/login.html", locals())
         else:
             error = "錯誤的PIN碼"
             return render(request, "user/login.html", locals())
