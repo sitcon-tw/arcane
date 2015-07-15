@@ -1,4 +1,4 @@
-from django.conf.urls import include, url
+from django.conf.urls import url
 
 urlpatterns =[
     url(r'^chgpin', "app.user.views.chgpin", name="change user pin"),
