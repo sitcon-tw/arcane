@@ -43,8 +43,7 @@ def edit(request, id=None):
             return render(request, "submit.html", {"content": "<h1>Submitted.</h1><meta http-equiv=\"refresh\" content=\"3; url=/card/" + card.cid + "\">"})
 
 
-@login_required
-def get(request, id):
+def get(request):
     if not is_player(request.user):
         raise PermissionDenied
     else:
@@ -60,8 +59,7 @@ def get(request, id):
             if is_player(request.user):
                 return render(request, "submit.html", {"content":"<h1>Submitted.</h1><meta http-equiv=\"refresh\" content=\"3; url=\"/\">"})
             else:
-                return redirect("get card", id=id)
-
+                return redirect("/card/" + id)
 
 @login_required
 def gen(request):
