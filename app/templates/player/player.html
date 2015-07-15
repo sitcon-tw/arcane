@@ -4,6 +4,6 @@
 {% block content %}
 <h1>{{ user.player.team.name }} <span style="font-size:25px">{{ user.get_full_name }}</span></h1>
 <p style="font-size:32px">{{ user.player.team.points }} <span style="font-size:20px">點</span></p>
-<p style="font-size:20px">（{{ user.player.points_acquired }} 點是這個玩家要來的）</p>
+<p style="font-size:20px">（來自這個玩家： {{ user.player.points_acquired }}）</p>
 
 {% endblock %}

@@ -10,7 +10,6 @@ def player(request, id=None):
             user = User.objects.get(username=id)
         except ObjectDoesNotExist:
             return render(request, "submit.html", {"content":"<h1>Wrong user</h1><meta http-equiv=\"refresh\" content=\"3; url=/\">", "title":"錯誤！"}, status=404)
-
         return redirect("/user/login/" + id)
     else:
         no_id = False

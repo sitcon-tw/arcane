@@ -19,7 +19,6 @@ class Player(models.Model):
     user = models.OneToOneField(User, verbose_name="User", help_text="The user of this player.")
     team = models.ForeignKey(Team, verbose_name="Team", help_text="The team this player belongs to.")
     points_acquired = models.IntegerField(verbose_name="Acquired Points", help_text="The amount of points acquired by this player.", default=0)
-    secret = models.CharField(max_length=16, primary_key=True, default=get_random_string(16), verbose_name="Reg. Token", help_text="A token used to simplify the process of registration.")
     modified_reason = models.TextField(verbose_name="Modified Reason", help_text="The reason of last modification.", null=True)
     history = HistoricalRecords()
 

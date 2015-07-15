@@ -1,12 +1,12 @@
 {% extends 'base.html' %}
 {% block title %}
-登入新手城
+Login
 {% endblock %}
 <h1>login</h1>
 {% block content %}
-<form action="{% url 'login' id %}" method="post">
+<form action="{% url 'staff login' %}" method="post">
   {% csrf_token %}
   {{ form.as_p }}
-  <input type="submit" value="登入"/>
+  <input type="submit" value="Login"/>
 </form>
 {% endblock %}
