@@ -15,7 +15,7 @@ def player(request, id=None):
                     "title": "錯誤！"}, status=404)
         return redirect("login", id)
     else:
-        if not id:
+        if not id == request.user.username:
 # rediect logged-in user to /player/<username>
             return redirect('player data', request.user.username)
         if request.user.is_staff:
@@ -26,6 +26,8 @@ def player(request, id=None):
             return render(request, 'player/player.html', {"user": user})
 
 
+def edit(request, id=None):
+    pass
 """
 # Edit Player Function, will implement if requested
 @login_required
