@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block title %}
+改 都改
+{% endblock %}
+{% block content %}
+<h1>更換名稱</h1>
+<form action="{% url 'change user name' %}" method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <input type="submit" value="更改"/>
+</form>
+{% endblock %}

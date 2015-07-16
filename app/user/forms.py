@@ -10,8 +10,8 @@ class LoginForm(forms.Form):
 
 
 class ChangeNameForm(forms.Form):
-    first_name = forms.CharField(label="姓")
-    last_name = forms.CharField(label="名字")
+    first_name = forms.CharField(label="姓", max_length=10)
+    last_name = forms.CharField(label="名字", max_length=10)
 
 
 PasswordChangeForm = auth_pwchg_form

@@ -7,7 +7,7 @@ from django.contrib.auth.views import password_change
 from django.contrib.auth.models import User
 from django.shortcuts import redirect, render
 
-from app.user.forms import PasswordChangeForm
+from app.user.forms import PasswordChangeForm, ChangeNameForm
 # from app.user.forms import PasswordChangeForm
 
 
@@ -53,7 +53,25 @@ def chgpin(request):
 
 
 def chgname(request):
-    pass
+    if not request.user.is_authenticated():
+        return redirect('home')
+    message = ""
+    if not request.method == 'GET':
+        form = ChangeNameForm({
+            "first_name": request.POST.get('first_name', ''),
+            "last_name": request.POST.get('last_name', ''),
+        })
+        if form.is_valid():
+            request.user.first_name = form.cleaned_data['first_name']
+            request.user.last_name = form.cleaned_data['last_name']
+            request.user.save()
+        return redirect('home')
+
+    form = ChangeNameForm({
+        "first_name": request.user.first_name,
+        "last_name": request.user.last_name,
+    })
+    return render(request, 'user/chgname.html', {"form": form, "message": message})
 
 
 def staff_login(request):
