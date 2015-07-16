@@ -16,7 +16,7 @@ class Team(models.Model):
     def points(self):
         s = 0
         for player in self.player.all():
-            s += player.points_acquired()
+            s += player.points_acquired
         return s
 
     def __str__(self):
