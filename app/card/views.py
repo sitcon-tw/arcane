@@ -85,10 +85,8 @@ def get(request, id=None):
                 # Add points
                 player = request.user.player
                 player.captured_card.add(card)
-                player.modified_reason = "Get %d point from card %s" % (card.value, card.name)
                 player.save()
                 card.retrieved = True
-                card.modified_reason = "Captured by %s" % request.user.get_full_name()
                 card.save()
                 return render(
                     request, "submit.html", {
@@ -112,7 +110,6 @@ def gen(request):
                 card.value = form.cleaned_data["value"]
                 card.long_desc = form.cleaned_data["long_desc"]
                 card.active = form.cleaned_data["active"]
-                card.modified_reason = form.cleaned_data["modified_reason"]
                 card.issuer = request.user
                 card.save()
             return render(
