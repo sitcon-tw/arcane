@@ -24,7 +24,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
 try:
-    from secret_key import *
+    from secret_key import SECRET_KEY
 except ImportError:
     f = open('secret_key.py', 'w')
     f.write('SECRET_KEY = \"'
@@ -33,7 +33,7 @@ except ImportError:
                                    )
                       for _ in range(random.randint(45, 50))) + "\"\n")
     f.close()
-    from secret_key import *
+    from secret_key import SECRET_KEY
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
