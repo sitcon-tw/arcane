@@ -1,4 +1,4 @@
-from app.models import Player, is_player, Card
+from app.models import Player, is_player, Card, History
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
@@ -23,7 +23,9 @@ def player(request, id=None):
             raise PermissionDenied
         else:
             user = request.user
-            return render(request, 'player/player.html', {"user": user})
+            records = History.objects.filter(user=user)
+            return render(request, 'player/player.html',
+                          {"user": user, "records": records})
 
 
 def edit(request, id=None):

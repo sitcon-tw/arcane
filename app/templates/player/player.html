@@ -6,4 +6,24 @@
 <p style="font-size:32px">{{ user.player.team.points }} <span style="font-size:20px">點</span></p>
 <p style="font-size:20px">（來自這個玩家： {{ user.player.points_acquired }}）</p>
 
+{% if records %}
+<table>
+    <th>
+        <tr>
+            <td>時間</td>
+            <td>行動類別</td>
+            <td>詳細資料</td>
+            <td>註解</td>
+        </tr>
+    </th>
+    <tr>
+    {% for record in records %}
+        <td>{{ record.date | date:'m/d H:i' }}</td>
+        <td>{{ record.action }}</td>
+        <td>從卡片 {{ record.card.name }} 中得到了 {{ record.card.value }} 分</td>
+        <td>{{ record.comment }}</td>
+    {% endfor %}
+    </tr>
+</table>
+{% endif %}
 {% endblock %}

@@ -18,7 +18,7 @@ def card(request, id=None):
                     "content":("<h1>Wrong card</h1>"
                                "<meta http-equiv=\"refresh\" content=\"3; url=/\">"),
                     "title":"錯誤！"}, status=404)
-        retriever = card.captured.get()
+        retriever = card.capturer
         return render(request, "card/card.html", locals())
 
 
