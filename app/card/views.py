@@ -85,10 +85,7 @@ def get(request, id=None):
                 # Add points
                 player = request.user.player
                 player.captured_card.add(card)
-                player.points_acquired = player.points_acquired + card.value
-                player.team.points = player.team.points + card.value
                 player.save()
-                player.team.save()
                 card.retrieved = True
                 card.save()
                 return render(

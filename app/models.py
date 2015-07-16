@@ -11,12 +11,34 @@ class Team(models.Model):
     name = models.CharField(max_length=100,
                             verbose_name="Name",
                             help_text="Name of the team.")
-    points = models.IntegerField(verbose_name="Points",
-                                 help_text="The current amount of points of this group.",
-                                 default=0)
 
     def __str__(self):
         return str(self.name) + " (" + str(self.tid) + ")"
+
+    def points(self):
+        s = 0
+        for player in self.player.all():
+            s += player.points_acquired()
+        return s
+
+
+class Player(models.Model):
+    id = models.AutoField(primary_key=True)
+    user = models.OneToOneField(User, verbose_name="User", help_text="The user of this player.")
+    team = models.ForeignKey(Team,
+                             verbose_name="Team",
+                             help_text="The team this player belongs to.",
+                             related_name="player")
+
+    def __str__(self):
+        return (str(self.user.get_full_name()) + " (" +
+                str(self.user.get_username()) + "), " + self.team.name)
+
+    def points_acquired(self):
+        s = self.captured_card.all().aggregate(models.Sum('value'))
+        if s['value__sum'] is None:
+            return 0
+        return s['value__sum']
 
 
 class Card(models.Model):
@@ -38,6 +60,8 @@ class Card(models.Model):
     long_desc = models.TextField(verbose_name="Descriptions",
                                  help_text="Long descriptions about the card.",
                                  blank=True)
+    issuer = models.ForeignKey(User, related_name="issued_card")
+    capturer = models.ForeignKey(Player, related_name="captured_card", null=True, blank=True)
 
     def __str__(self):
         if self.active and not self.retrieved:
@@ -49,23 +73,6 @@ class Card(models.Model):
         else:
             return (str(self.name) + " (" + str(self.cid) + "), "
                     "inactive, " + str(self.value) + " points.")
-
-
-class Player(models.Model):
-    id = models.AutoField(primary_key=True)
-    user = models.OneToOneField(User, verbose_name="User", help_text="The user of this player.")
-    team = models.ForeignKey(Team,
-                             verbose_name="Team",
-                             help_text="The team this player belongs to.")
-    points_acquired = models.IntegerField(verbose_name="Acquired Points",
-                                          help_text="The amount of points acquired by this player.",
-                                          default=0)
-    captured_card = models.ManyToManyField(Card, related_name="captured", blank=True)
-
-    def __str__(self):
-        return (str(self.user.get_full_name()) + " (" +
-                str(self.user.get_username()) + "), " + self.team.name)
-
 
 def is_player(user):
     try:

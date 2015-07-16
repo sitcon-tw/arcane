@@ -15,7 +15,7 @@
   {% endif %}
 </p>
 {% if card.retrieved %}
-<p style="font-size:20px">提領者：{{ retriever }}</p>
+<p style="font-size:20px">提領者：{{ card.capturer }}</p>
 {% endif %}
 
 <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data={% url 'get' card.cid %}" />
