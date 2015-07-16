@@ -13,9 +13,6 @@ class Team(models.Model):
                             null=True,
                             verbose_name="Name",
                             help_text="Name of the team.")
-    points = models.IntegerField(verbose_name="Points",
-                                 help_text="The current amount of points of this group.",
-                                 default=0)
     modified_reason = models.TextField(verbose_name="Modified Reason",
                                        help_text="The reason of last modification.",
                                        null=True)
@@ -24,16 +21,21 @@ class Team(models.Model):
     def __str__(self):
         return str(self.name) + " (" + str(self.tid) + ")"
 
+    def points(self):
+        s = 0
+        for player in self.player.all():
+            s += player.points_acquired()
+        return s
+
 
 class Player(models.Model):
     id = models.AutoField(primary_key=True)
     user = models.OneToOneField(User, verbose_name="User", help_text="The user of this player.")
     team = models.ForeignKey(Team,
                              verbose_name="Team",
-                             help_text="The team this player belongs to.")
-    points_acquired = models.IntegerField(verbose_name="Acquired Points",
-                                          help_text="The amount of points acquired by this player.",
-                                          default=0)
+                             help_text="The team this player belongs to.",
+                             related_name="player")
+
     modified_reason = models.TextField(verbose_name="Modified Reason",
                                        help_text="The reason of last modification.",
                                        null=True)
@@ -42,6 +44,10 @@ class Player(models.Model):
     def __str__(self):
         return (str(self.user.get_full_name()) + " (" +
                 str(self.user.get_username()) + "), " + self.team.name)
+
+    def points_acquired(self):
+        s = self.captured_card.all().aggregate(models.Sum('value'))
+        return s['value__sum']
 
 
 class Card(models.Model):
@@ -65,6 +71,8 @@ class Card(models.Model):
                                  help_text="Long descriptions about the card.",
                                  null=True,
                                  blank=True)
+    issuer = models.ForeignKey(User, related_name="issued_card")
+    capturer = models.ForeignKey(Player, related_name="captured_card", null=True, blank=True)
     modified_reason = models.TextField(
         verbose_name="Modified Reason",
         help_text="The reason of last modification.",
