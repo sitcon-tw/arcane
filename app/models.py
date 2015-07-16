@@ -12,14 +12,15 @@ class Team(models.Model):
                             verbose_name="Name",
                             help_text="Name of the team.")
 
-    def __str__(self):
-        return str(self.name) + " (" + str(self.tid) + ")"
-
+    @property
     def points(self):
         s = 0
         for player in self.player.all():
             s += player.points_acquired()
         return s
+
+    def __str__(self):
+        return str(self.name) + " (" + str(self.tid) + ")"
 
 
 class Player(models.Model):
@@ -30,15 +31,16 @@ class Player(models.Model):
                              help_text="The team this player belongs to.",
                              related_name="player")
 
-    def __str__(self):
-        return (str(self.user.get_full_name()) + " (" +
-                str(self.user.get_username()) + "), " + self.team.name)
-
+    @property
     def points_acquired(self):
         s = self.captured_card.all().aggregate(models.Sum('value'))
         if s['value__sum'] is None:
             return 0
         return s['value__sum']
+
+    def __str__(self):
+        return (str(self.user.get_full_name()) + " (" +
+                str(self.user.get_username()) + "), " + self.team.name)
 
 
 class Card(models.Model):
