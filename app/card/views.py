@@ -73,7 +73,7 @@ def get(request, id=None):
                                "<meta http-equiv=\"refresh\" content=\"3; url=/\">"),
                     "title":"錯誤！"}, status=404)
 
-        if not request.POST:
+        if not request.method == 'POST':
             form = CardForm({
                 "name": card.name,
                 "value": card.value,
@@ -85,6 +85,11 @@ def get(request, id=None):
         else:
             if is_player(request.user):
                 # Add points
+                player = request.user.player
+                player.captured_card.add(card)
+                player.save()
+                card.retrieved = True
+                card.save()
                 return render(
                     request, "submit.html", {
                         "content":("<h1>Submitted.</h1>"
