@@ -18,6 +18,7 @@ def card(request, id=None):
                     "content":("<h1>Wrong card</h1>"
                                "<meta http-equiv=\"refresh\" content=\"3; url=/\">"),
                     "title":"錯誤！"}, status=404)
+        retriever = card.captured.get()
         return render(request, "card/card.html", locals())
 
 
@@ -41,8 +42,7 @@ def edit(request, id=None):
                  "value": card.value,
                  "long_desc": card.long_desc,
                  "active": card.active,
-                 "retrieved": card.retrieved,
-                 "modified_reason": ""})
+                 "retrieved": card.retrieved})
             return render(request, "card/edit.html", locals())
         else:
             form = CardForm(request.POST)
@@ -51,7 +51,6 @@ def edit(request, id=None):
                 card.value = form.cleaned_data["value"]
                 card.long_desc = form.cleaned_data["long_desc"]
                 card.active = form.cleaned_data["active"]
-                card.modified_reason = form.cleaned_data["modified_reason"]
                 card.save()
             return render(
                 request, "submit.html", {
@@ -79,8 +78,7 @@ def get(request, id=None):
                 "value": card.value,
                 "long_desc": card.long_desc,
                 "active": card.active,
-                "retrieved": card.retrieved,
-                "modified_reason": ""})
+                "retrieved": card.retrieved})
             return render(request, "card/get.html", locals())
         else:
             if is_player(request.user):
@@ -114,7 +112,6 @@ def gen(request):
                 card.value = form.cleaned_data["value"]
                 card.long_desc = form.cleaned_data["long_desc"]
                 card.active = form.cleaned_data["active"]
-                card.modified_reason = form.cleaned_data["modified_reason"]
                 card.save()
             return render(
                 request, "submit.html", {

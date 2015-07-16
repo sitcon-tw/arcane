@@ -15,10 +15,10 @@
   {% endif %}
 </p>
 {% if card.retrieved %}
-<h2>提領者：{{ card.modified_reason }}</h2>
+<p style="font-size:20px">提領者：{{ retriever }}</p>
 {% endif %}
 
-<img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data={{ get_url }}" />
+<img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data={% url 'get' card.cid %}" />
 
 {% autoescape off %}<p>{{ card.long_desc }}</p> {% endautoescape %}
 

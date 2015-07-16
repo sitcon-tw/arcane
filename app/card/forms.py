@@ -7,5 +7,3 @@ class CardForm(forms.Form):
     long_desc = forms.CharField(max_length=200, widget=forms.Textarea(), label="說明", required=False)
     active = forms.BooleanField(label="開通", help_text="該點數卡是否可用", required=False)
     retrieved = forms.BooleanField(label="提領", help_text="該點數卡是否被提領了", required=False)
-    modified_reason = forms.CharField(
-        max_length=200, widget=forms.Textarea(), label="更動原因", required=False)

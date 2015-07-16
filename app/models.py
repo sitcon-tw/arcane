@@ -1,7 +1,6 @@
 from django.contrib.auth.models import User
 from django.db import models
 from django.utils.crypto import get_random_string
-from simple_history.models import HistoricalRecords
 
 
 class Team(models.Model):
@@ -10,16 +9,11 @@ class Team(models.Model):
                            verbose_name="Team ID",
                            help_text="Alphanumeric name for the team.")
     name = models.CharField(max_length=100,
-                            null=True,
                             verbose_name="Name",
                             help_text="Name of the team.")
     points = models.IntegerField(verbose_name="Points",
                                  help_text="The current amount of points of this group.",
                                  default=0)
-    modified_reason = models.TextField(verbose_name="Modified Reason",
-                                       help_text="The reason of last modification.",
-                                       null=True)
-    history = HistoricalRecords()
 
     def __str__(self):
         return str(self.name) + " (" + str(self.tid) + ")"
@@ -40,29 +34,21 @@ class Card(models.Model):
         max_length=32,
         verbose_name="Name",
         help_text="Name of the card.",
-        null=True,
         blank=True)
     long_desc = models.TextField(verbose_name="Descriptions",
                                  help_text="Long descriptions about the card.",
-                                 null=True,
                                  blank=True)
-    modified_reason = models.TextField(
-        verbose_name="Modified Reason",
-        help_text="The reason of last modification.",
-        null=True,
-        blank=True)
-    history = HistoricalRecords()
 
     def __str__(self):
         if self.active and not self.retrieved:
-            return (str(self.name) + " (" + str(self.cid) + "),"
-                    " active, " + str(self.value) + " points.")
+            return (str(self.name) + " (" + str(self.cid) + "), "
+                    "active, " + str(self.value) + " points.")
         elif not self.active and self.retrieved:
-            return (str(self.name) + " (" + str(self.cid) + "),"
-                    "retrieved, " + str(self.value) + " points.")
+            return (str(self.name) + " (" + str(self.cid) + "), "
+                    "retrieved by " + self.captured.get() + ", " + str(self.value) + " points.")
         else:
-            return (str(self.name) + " (" + str(self.cid) + "),"
-                    " inactive, " + str(self.value) + " points.")
+            return (str(self.name) + " (" + str(self.cid) + "), "
+                    "inactive, " + str(self.value) + " points.")
 
 
 class Player(models.Model):
@@ -74,11 +60,7 @@ class Player(models.Model):
     points_acquired = models.IntegerField(verbose_name="Acquired Points",
                                           help_text="The amount of points acquired by this player.",
                                           default=0)
-    modified_reason = models.TextField(verbose_name="Modified Reason",
-                                       help_text="The reason of last modification.",
-                                       null=True)
-    captured_card = models.ManyToManyField(Card, related_name="captured")
-    history = HistoricalRecords()
+    captured_card = models.ManyToManyField(Card, related_name="captured", blank=True)
 
     def __str__(self):
         return (str(self.user.get_full_name()) + " (" +
@@ -86,4 +68,7 @@ class Player(models.Model):
 
 
 def is_player(user):
-    return not user.is_staff
+    try:
+        if user.player: return True
+    except:
+        return False

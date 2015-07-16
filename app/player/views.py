@@ -52,9 +52,7 @@ def edit(request, id=None):
         else:
             if not request.POST:
                 form = PlayerForm({
-                    "name": user.username,
-                    ""
-                    "modified_reason": ""})
+                    "name": user.username})
                 return render(request, "card/edit.html", locals())
             else:
                 form = CardForm(request.POST)
@@ -64,7 +62,6 @@ def edit(request, id=None):
                     card.value = form.cleaned_data["value"]
                     card.long_desc = form.cleaned_data["long_desc"]
                     card.active = form.cleaned_data["active"]
-                    card.modified_reason = form.cleaned_data["modified_reason"]
                     card.save()
                 return render(
                     request, "submit.html", {
