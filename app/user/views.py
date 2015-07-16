@@ -2,7 +2,6 @@ from app.user.forms import LoginForm
 from django.contrib.auth import login as auth_login
 from django.contrib.auth import views as auth_view
 from django.contrib.auth import authenticate
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import password_change
 from django.contrib.auth.models import User
 from django.shortcuts import redirect, render
