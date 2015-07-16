@@ -76,8 +76,24 @@ class Card(models.Model):
             return (str(self.name) + " (" + str(self.cid) + "), "
                     "inactive, " + str(self.value) + " points.")
 
+class History(models.Model):
+    no = models.AutoField(primary_key=True)
+    action = models.IntegerField(choices=(
+        (1, "generate card"),
+        (2, "edit card"),
+        (3, "inactive the card"),
+        (4, "active a card"),
+        (10, "capture a card"),
+    ))
+    user = models.ForeignKey(User)
+    card = models.ForeignKey(Card)
+    comment = models.CharField(max_length=255)
+    date = models.DateTimeField(auto_now_add=True)
+
+
 def is_player(user):
     try:
-        if user.player: return True
+        if user.player:
+            return True
     except:
         return False

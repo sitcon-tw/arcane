@@ -1,5 +1,5 @@
 from app.card.forms import CardForm
-from app.models import Card, is_player
+from app.models import Card, History, is_player
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
 from django.shortcuts import render
@@ -52,6 +52,8 @@ def edit(request, id=None):
                 card.long_desc = form.cleaned_data["long_desc"]
                 card.active = form.cleaned_data["active"]
                 card.save()
+                record = History(action=2, user=request.user, card=card)
+                record.save()
             return render(
                 request, "submit.html", {
                     "content": ("<h1>Submitted.</h1>"
@@ -88,6 +90,9 @@ def get(request, id=None):
                 player.save()
                 card.retrieved = True
                 card.save()
+                record = History(action=10, user=request.user, card=card)
+                record.save()
+
                 return render(
                     request, "submit.html", {
                         "content": ("<h1>Submitted.</h1>"
@@ -112,6 +117,8 @@ def gen(request):
                 card.active = form.cleaned_data["active"]
                 card.issuer = request.user
                 card.save()
+                record = History(action=1, user=request.user, card=card)
+                record.save()
             return render(
                 request, "submit.html", {
                     "content":("<h1>Submitted.</h1>"
