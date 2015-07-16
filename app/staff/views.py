@@ -1,8 +1,13 @@
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse
+from django.shortcuts import render
+
+from app import models as data
 
 
 @login_required
 def dashboard(request):
-    # WIP
-    return HttpResponse("dashboard")
+    players = data.Player.objects.all()
+    cards = data.Card.objects.all()
+    teams = data.Team.objects.all()
+    historys = data.History.objects.all()
+    return render(request, 'staff/dashboard.html', locals())

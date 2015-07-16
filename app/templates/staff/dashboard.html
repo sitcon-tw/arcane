@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block title %}
+儀表板（？）
+{% endblock %}
+
+{% block content %}
+<h1>儀表板（？）</h1>
+<h2>卡片</h2>
+<ul>
+{% for card in cards %}
+<li>{{ card.cid }} {{ card.name }} {{ card.value }} {{ card.active }} {{ card.retrieved }} {{ card.comment }}
+    <a href="{% url 'edit card' card.cid %}">Edit</a>
+</li>
+{% endfor %}
+</ul>
+<h2>隊伍</h2>
+<ul>
+{% for team in teams %}
+<li>{{ team.name }} {{ team.points }}</li>
+{% endfor %}
+</ul>
+<h2>個人</h2>
+<ul>
+{% for player in players %}
+<li>{{ player.user.get_full_name }} {{ player.points_acquired }}</li>
+{% endfor %}
+</ul>
+
+<h2>Log</h2>
+<ul>
+{% for history in historys %}
+<li>{{ history.no }} {{ history.action_explain }} {{ history.user.get_full_name }}
+    {{ history.card.name }} {{ history.comment }} {{ history.date | date:'m/d H:i' }}</li>
+{% endfor %}
+</ul>
+
+{% endblock %}
