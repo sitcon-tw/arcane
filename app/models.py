@@ -76,19 +76,26 @@ class Card(models.Model):
             return (str(self.name) + " (" + str(self.cid) + "), "
                     "inactive, " + str(self.value) + " points.")
 
+
 class History(models.Model):
+    ACTION_CODE = {
+        1: "generate card",
+        2: "edit card",
+        3: "inactive the card",
+        4: "active a card",
+        10: "capture a card",
+    }
+
     no = models.AutoField(primary_key=True)
-    action = models.IntegerField(choices=(
-        (1, "generate card"),
-        (2, "edit card"),
-        (3, "inactive the card"),
-        (4, "active a card"),
-        (10, "capture a card"),
-    ))
+    action = models.IntegerField(choices=list(ACTION_CODE.items()))
     user = models.ForeignKey(User)
     card = models.ForeignKey(Card)
     comment = models.CharField(max_length=255)
     date = models.DateTimeField(auto_now_add=True)
+
+    @property
+    def action_explain(self):
+        return History.ACTION_CODE[self.action]
 
 
 def is_player(user):
