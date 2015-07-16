@@ -112,6 +112,7 @@ def gen(request):
                 card.long_desc = form.cleaned_data["long_desc"]
                 card.active = form.cleaned_data["active"]
                 card.modified_reason = form.cleaned_data["modified_reason"]
+                card.issuer = request.user
                 card.save()
             return render(
                 request, "submit.html", {
