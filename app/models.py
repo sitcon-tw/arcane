@@ -25,6 +25,25 @@ class Team(models.Model):
         return str(self.name) + " (" + str(self.tid) + ")"
 
 
+class Player(models.Model):
+    id = models.AutoField(primary_key=True)
+    user = models.OneToOneField(User, verbose_name="User", help_text="The user of this player.")
+    team = models.ForeignKey(Team,
+                             verbose_name="Team",
+                             help_text="The team this player belongs to.")
+    points_acquired = models.IntegerField(verbose_name="Acquired Points",
+                                          help_text="The amount of points acquired by this player.",
+                                          default=0)
+    modified_reason = models.TextField(verbose_name="Modified Reason",
+                                       help_text="The reason of last modification.",
+                                       null=True)
+    history = HistoricalRecords()
+
+    def __str__(self):
+        return (str(self.user.get_full_name()) + " (" +
+                str(self.user.get_username()) + "), " + self.team.name)
+
+
 class Card(models.Model):
     cid = models.CharField(max_length=16,
                            primary_key=True,
@@ -63,26 +82,6 @@ class Card(models.Model):
         else:
             return (str(self.name) + " (" + str(self.cid) + "),"
                     " inactive, " + str(self.value) + " points.")
-
-
-class Player(models.Model):
-    id = models.AutoField(primary_key=True)
-    user = models.OneToOneField(User, verbose_name="User", help_text="The user of this player.")
-    team = models.ForeignKey(Team,
-                             verbose_name="Team",
-                             help_text="The team this player belongs to.")
-    points_acquired = models.IntegerField(verbose_name="Acquired Points",
-                                          help_text="The amount of points acquired by this player.",
-                                          default=0)
-    modified_reason = models.TextField(verbose_name="Modified Reason",
-                                       help_text="The reason of last modification.",
-                                       null=True)
-    captured_card = models.ManyToManyField(Card, related_name="captured")
-    history = HistoricalRecords()
-
-    def __str__(self):
-        return (str(self.user.get_full_name()) + " (" +
-                str(self.user.get_username()) + "), " + self.team.name)
 
 
 def is_player(user):
