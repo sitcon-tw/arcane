@@ -2,7 +2,7 @@ from app.card.forms import CardForm
 from app.models import Card, is_player
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
-from django.shortcuts import redirect, render
+from django.shortcuts import render
 
 
 @login_required
@@ -87,7 +87,10 @@ def get(request, id=None):
                 # Add points
                 player = request.user.player
                 player.captured_card.add(card)
+                player.points_acquired = player.points_acquired + card.value
+                player.team.points = player.team.points + card.value
                 player.save()
+                player.team.save()
                 card.retrieved = True
                 card.save()
                 return render(
@@ -95,7 +98,7 @@ def get(request, id=None):
                         "content":("<h1>Submitted.</h1>"
                                    "<meta http-equiv=\"refresh\" content=\"3; url=\"/\">")})
             else:
-                return redirect("/card/" + id)
+                raise PermissionDenied
 
 @login_required
 def gen(request):
