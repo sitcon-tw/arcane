@@ -7,6 +7,7 @@
 <h1>儀表板（？）</h1>
 <h2>卡片</h2>
 <input type="button" onclick="location.href='{% url "generate card" %}'" value="產生" />
+<input type="button" onclick="location.href='{% url "fast send" %}'" value="產生並發送" />
 <ul>
 {% for card in cards %}
 <li><a href="{% url 'view card' card.cid %}">{{ card.name }} ({{ card.cid }}), {{ card.value }} 點</a>&nbsp;&nbsp;
