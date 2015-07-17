@@ -3,6 +3,15 @@ from app.models import Card, History, is_player
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
 from django.shortcuts import render
+from django.core.urlresolvers import reverse
+
+
+def CardNotFound(request):
+    return render(
+        request, "submit.html", {
+            "success": False,
+            "content": "不在系統中的卡片，可能是被註銷了，請戳戳工作人員吧",
+            "title": "不認識的卡片"}, status=404)
 
 
 @login_required
@@ -13,11 +22,7 @@ def card(request, id=None):
         try:
             card = Card.objects.get(cid=id)
         except ObjectDoesNotExist:
-            return render(
-                request, "submit.html", {
-                    "content":("<h1>Wrong card</h1>"
-                               "<meta http-equiv=\"refresh\" content=\"3; url=/\">"),
-                    "title":"錯誤！"}, status=404)
+            return CardNotFound(request)
         retriever = card.capturer
         host = request.META['HTTP_HOST']
         return render(request, "card/card.html", locals())
@@ -31,12 +36,7 @@ def edit(request, id=None):
         try:
             card = Card.objects.get(cid=id)
         except ObjectDoesNotExist:
-            return render(
-                request, "submit.html", {
-                    "content":("<h1>Wrong card</h1>"
-                               "<meta http-equiv=\"refresh\" content=\"3; url=/\">"),
-                    "title":"錯誤！"}, status=404)
-
+            return CardNotFound(request)
         if not request.POST:
             form = CardForm(
                 {"name": card.name,
@@ -63,9 +63,11 @@ def edit(request, id=None):
                 record.save()
             return render(
                 request, "submit.html", {
-                    "content": ("<h1>Submitted.</h1>"
-                                "<meta http-equiv=\"refresh\" content=\"3; "
-                                "url=/card/" + card.cid + "\">")})
+                    "success": True,
+                    "title": "成功編輯",
+                    "content": "成功編輯卡片 %s" % card.name,
+                    "next_page": reverse('view card', args=[card.cid]),
+                    })
 
 
 def get(request, id=None):
@@ -79,12 +81,7 @@ def get(request, id=None):
         try:
             card = Card.objects.get(cid=id)
         except ObjectDoesNotExist:
-            return render(
-                request, "submit.html", {
-                    "content":("<h1>Wrong card</h1>"
-                               "<meta http-equiv=\"refresh\" content=\"3; url=/\">"),
-                    "title":"錯誤！"}, status=404)
-
+            return CardNotFound(request)
         if not request.method == 'POST':
             form = CardForm({
                 "name": card.name,
@@ -106,8 +103,11 @@ def get(request, id=None):
 
                 return render(
                     request, "submit.html", {
-                        "content": ("<h1>Submitted.</h1>"
-                                   "<meta http-equiv=\"refresh\" content=\"3; url=\"/\">")})
+                        "success": True,
+                        "title": "恭喜獲得 %d 點" % card.value,
+                        "content": "從 %s 中得到了 %d 點" % (card.name, card.value),
+                        "next_page": reverse('home')
+                    })
             else:
                 raise PermissionDenied
 
@@ -132,9 +132,11 @@ def gen(request):
                 record.save()
             return render(
                 request, "submit.html", {
-                    "content":("<h1>Submitted.</h1>"
-                               "<meta http-equiv=\"refresh\" content=\"3; "
-                               "url=/card/" + card.cid + "\">")})
+                    "success": True,
+                    "title": "一張卡片就此誕生！",
+                    "content": "生成了一張卡片 %s 含有 %d 點" % (card.name, card.value),
+                    "next_page": reverse('generate card'),
+                })
     else:
         raise PermissionDenied
 
