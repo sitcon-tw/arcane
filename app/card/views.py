@@ -70,7 +70,11 @@ def edit(request, id=None):
 
 def get(request, id=None):
     if not is_player(request.user):
-        raise PermissionDenied
+        return render(
+            request, "submit.html", {
+                "content":("<h1>你沒有登入！</h1>"
+                           "你可能需要先掃描一下識別證上的 QR_Code 來登入系統"),
+                "title":"未登入！"}, status=404)
     else:
         try:
             card = Card.objects.get(cid=id)
