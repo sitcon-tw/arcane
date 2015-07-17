@@ -67,7 +67,3 @@ target/
 # vim
 *.swp
 
-
-# will remove after it's released
-app/migrations/
-
