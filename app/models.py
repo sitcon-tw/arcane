@@ -71,7 +71,7 @@ class Card(models.Model):
                     "active, " + str(self.value) + " points.")
         elif not self.active and self.retrieved:
             return (str(self.name) + " (" + str(self.cid) + "), "
-                    "retrieved by " + self.captured.get() + ", " + str(self.value) + " points.")
+                    "retrieved by " + str(self.capturer) + ", " + str(self.value) + " points.")
         else:
             return (str(self.name) + " (" + str(self.cid) + "), "
                     "inactive, " + str(self.value) + " points.")
