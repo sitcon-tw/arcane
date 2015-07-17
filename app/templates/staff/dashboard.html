@@ -6,6 +6,7 @@
 {% block content %}
 <h1>儀表板（？）</h1>
 <h2>卡片</h2>
+<input type="button" onclick="location.href='{% url "generate card" %}'" value="產生" />
 <ul>
 {% for card in cards %}
 <li><a href="{% url 'view card' card.cid %}">{{ card.name }} ({{ card.cid }}), {{ card.value }} 點</a>&nbsp;&nbsp;
@@ -18,6 +19,7 @@
   {% endif %}
   &nbsp;&nbsp;
   <input type="button" onclick="location.href='{% url "edit card" card.cid %}'" value="編輯" /> &nbsp;&nbsp;
+  <input type="button" onclick="location.href='{% url "feed card" card.cid %}'" value="餵給" /> &nbsp;&nbsp;
   {{ card.long_desc }}
 </li>
 {% endfor %}

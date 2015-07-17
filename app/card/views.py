@@ -1,4 +1,4 @@
-from app.card.forms import CardForm
+from app.card.forms import CardForm, FeedForm
 from app.models import Card, History, is_player
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
@@ -140,4 +140,41 @@ def gen(request):
 
 @login_required
 def feed(request, id=None):
-    pass
+    if not request.user.is_staff:
+        raise PermissionDenied
+    else:
+        try:
+            card = Card.objects.get(cid=id)
+        except ObjectDoesNotExist:
+            return render(
+                request, "submit.html", {
+                    "content":("<h1>Wrong card</h1>"
+                               "<meta http-equiv=\"refresh\" content=\"3; url=/\">"),
+                    "title":"錯誤！"}, status=404)
+
+        if not card.active or card.retrieved :
+            return render(
+                request, "submit.html", {
+                    "content":("<h1>Wrong card</h1>"
+                               "<meta http-equiv=\"refresh\" content=\"3; url=/\">"),
+        else:
+            if not request.POST:
+                form = FeedForm()
+                return render(request, "card/feed.html", locals())
+            else:
+                form = FeedForm(request.POST)
+                if form.is_valid():
+                    player = form.cleaned_data["player"]
+                    player.captured_card.add(card)
+                    player.save()
+                    card.retrieved = True
+                    card.save()
+                    card.save()
+                    record = History(action=0xfeed, user=request.user, card=card,
+                                     comment="給" + player.user.get_full_name() + " (" + player.user.username + ")")
+                    record.save()
+                return render(
+                    request, "submit.html", {
+                        "content": ("<h1>Submitted.</h1>"
+                                    "<meta http-equiv=\"refresh\" content=\"3; "
+                                    "url=/card/" + card.cid + "\">")})

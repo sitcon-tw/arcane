@@ -62,7 +62,7 @@ def feed(request, id=None):
                     card.retrieved = True
                     card.save()
                     record = History(action=0xfeed, user=request.user, card=card,
-                                     comment="給" + user.get_full_name + " (" + user.username + ")")
+                                     comment="給" + user.get_full_name() + " (" + user.username + ")")
                     record.save()
                     card.save()
 
