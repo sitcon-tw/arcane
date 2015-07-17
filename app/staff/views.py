@@ -9,5 +9,5 @@ def dashboard(request):
     players = data.Player.objects.all()
     cards = data.Card.objects.all()
     teams = data.Team.objects.all()
-    historys = data.History.objects.all()
+    history_entries = data.History.objects.all()
     return render(request, 'staff/dashboard.html', locals())

@@ -36,9 +36,9 @@
 
 <h2>Log</h2>
 <ul>
-{% for history in historys %}
-<li>{{ history.date | date:'Y-m-d H:i:s' }} {{ history.action_explain }}:&nbsp; {{ history.user.get_full_name }}
-  {{ history.card.name }} {{ history.comment }}</li>
+{% for entry in history_entries %}
+<li>{{ entry.date | date:'Y-m-d H:i:s' }} {{ entry.action_explain }}:&nbsp; {{ entry.user.get_full_name }}
+  {{ entry.card.name }} {{ entry.comment }}</li>
 {% endfor %}
 </ul>
 
