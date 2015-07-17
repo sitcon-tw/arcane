@@ -16,10 +16,10 @@ def player(request, id=None):
         return redirect("login", id)
     else:
         if not id == request.user.username:
-# rediect logged-in user to /player/<username>
+            # rediect logged-in user to /player/<username>
             return redirect('player data', request.user.username)
-        if request.user.is_staff:
-# ban staff
+        if not is_player(request.user):
+            # ban non player
             raise PermissionDenied
         else:
             user = request.user
