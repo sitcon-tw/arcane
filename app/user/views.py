@@ -15,10 +15,10 @@ def login(request, id=None):
         return redirect('home')
     else:
         if not User.objects.filter(username=id).exists():
-            return render(
-                request, "submit.html", {
+            return render(request, "submit.html", {
+                    "success": False,
                     "content": "不認識的使用者，你真的是勇者嗎？",
-                    "title": "不明人士"}, status=404)
+                    "title": "發現不明人士"}, status=404)
 
     if not request.POST:
         form = LoginForm()
