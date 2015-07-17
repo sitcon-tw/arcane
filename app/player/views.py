@@ -8,12 +8,6 @@ from django.shortcuts import redirect, render
 
 def player(request, id=None):
     if not request.user.is_authenticated():
-        if not User.objects.filter(username=id).exists():
-            return render(
-                request, "submit.html", {
-                    "content": ("<h1>Wrong user</h1>"
-                               "<meta http-equiv=\"refresh\" content=\"3; url=/\">"),
-                    "title": "錯誤！"}, status=404)
         return redirect("login", id)
     else:
         if not id == request.user.username:
