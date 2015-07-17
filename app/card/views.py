@@ -96,6 +96,7 @@ def get(request, id=None):
                 player = request.user.player
                 player.captured_card.add(card)
                 player.save()
+                card.retrieved = True
                 card.save()
                 record = History(action=10, user=request.user, card=card)
                 record.save()
