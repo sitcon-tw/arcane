@@ -17,7 +17,7 @@
   已被領取
   {% endif %}
   &nbsp;&nbsp;
-  <a href="{% url 'edit card' card.cid %}">編輯</a> &nbsp;&nbsp;
+  <input type="button" onclick="location.href='{% url "edit card" card.cid %}'" value="編輯" /> &nbsp;&nbsp;
   {{ card.long_desc }}
 </li>
 {% endfor %}
