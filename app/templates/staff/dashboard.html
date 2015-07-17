@@ -8,8 +8,17 @@
 <h2>卡片</h2>
 <ul>
 {% for card in cards %}
-<li>{{ card.cid }} {{ card.name }} {{ card.value }} {{ card.active }} {{ card.retrieved }} {{ card.comment }}
-    <a href="{% url 'edit card' card.cid %}">Edit</a>
+<li><a href="{% url 'view card' card.cid %}">{{ card.name }} ({{ card.cid }}), {{ card.value }} 點</a>&nbsp;&nbsp;
+  {% if card.active and not card.retrieved %}
+  已啟用，尚未被領取
+  {% elif not card.active and not card.retrieved %}
+  尚未啟用
+  {% else %}
+  已被領取
+  {% endif %}
+  &nbsp;&nbsp;
+  <a href="{% url 'edit card' card.cid %}">編輯</a> &nbsp;&nbsp;
+  {{ card.long_desc }}
 </li>
 {% endfor %}
 </ul>
@@ -18,9 +27,9 @@
 {% for team in teams %}
 <li>{{ team.name }} ({{ team.tid }}), {{ team.points }} 點</li>
 <ul>
-    {% for player in team.player.all %}
-    <li>{{ player.user.get_full_name }} ({{ player.user.username }}), {{ player.points_acquired }} 點</li>
-    {% endfor %}
+  {% for player in team.player.all %}
+  <li>{{ player.user.get_full_name }} ({{ player.user.username }}), {{ player.points_acquired }} 點</li>
+  {% endfor %}
 </ul>
 {% endfor %}
 </ul>
@@ -28,8 +37,8 @@
 <h2>Log</h2>
 <ul>
 {% for history in historys %}
-<li>{{ history.no }} {{ history.action_explain }} {{ history.user.get_full_name }}
-    {{ history.card.name }} {{ history.comment }} {{ history.date | date:'m/d H:i' }}</li>
+<li>{{ history.date | date:'Y-m-d H:i:s' }} {{ history.action_explain }}:&nbsp; {{ history.user.get_full_name }}
+  {{ history.card.name }} {{ history.comment }}</li>
 {% endfor %}
 </ul>
 
