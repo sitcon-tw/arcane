@@ -169,10 +169,14 @@ def feed(request, id=None):
                     card.retrieved = True
                     card.capturer = player
                     card.save()
-                    record = History(action=0xfeed, user=request.user, card=card,
-                                     comment="給" + player.user.get_full_name() + " (" + player.user.username + ")")
-                    record.save()
-
+                    record_reciever = History(
+                        action=0xfeed, user=player.user, card=card,
+                        comment="從 %s 收到一張卡片" % request.user.get_full_name())
+                    record_reciever.save()
+                    record_sender = History(
+                        action=0xfeed, user=request.user, card=card,
+                        comment="給了 %s (%s)" % (player.user.get_full_name(), player.user.username))
+                    record_sender.save()
                     return render(
                         request, "submit.html", {
                             "success": True,
