@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block title %}
+餵食
+{% endblock %}
+{% block content %}
+<h1>餵食 {{ user.get_full_name }} ({{ user.username }})</h1>
+{% if error %}
+<p>{{ error }}</p>
+{% endif %}
+<form action="{% url 'feed player' user.username %}" method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <input type="submit" value="餵"/>
+</form>
+{% endblock %}

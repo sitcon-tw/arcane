@@ -1,4 +1,5 @@
-from app.models import Player, is_player, Card, History
+from app.models import Card, History, is_player
+from app.player.forms import FeedForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
@@ -27,13 +28,8 @@ def player(request, id=None):
             return render(request, 'player/player.html',
                           {"user": user, "records": records})
 
-
-def edit(request, id=None):
-    pass
-"""
-# Edit Player Function, will implement if requested
 @login_required
-def edit(request, id=None):
+def feed(request, id=None):
     if not request.user.is_staff:
         raise PermissionDenied
     else:
@@ -45,6 +41,7 @@ def edit(request, id=None):
                     "content":("<h1>Wrong user</h1>"
                                "<meta http-equiv=\"refresh\" content=\"3; url=/\">"),
                     "title":"錯誤！"}, status=404)
+
         if not is_player(user):
             return render(
                 request, "submit.html", {
@@ -53,21 +50,26 @@ def edit(request, id=None):
                     "title":"錯誤！"}, status=404)
         else:
             if not request.POST:
-                form = PlayerForm({
-                    "name": user.username})
-                return render(request, "card/edit.html", locals())
+                form = FeedForm()
+                return render(request, "player/feed.html", locals())
             else:
-                form = CardForm(request.POST)
+                form = FeedForm(request.POST)
                 if form.is_valid():
-                    card = Card()
-                    card.name = form.cleaned_data["name"]
-                    card.value = form.cleaned_data["value"]
-                    card.long_desc = form.cleaned_data["long_desc"]
-                    card.active = form.cleaned_data["active"]
+                    player = user.player
+                    card = form.cleaned_data["card"]
+                    player.captured_card.add(card)
+                    player.save()
+                    card.retrieved = True
                     card.save()
-                return render(
-                    request, "submit.html", {
-                        "content":("<h1>Submitted.</h1>"
-                                   "<meta http-equiv=\"refresh\" content=\"3; "
-                                   "url=/card/" + card.cid + "\">")})
-"""
+                    record = History(action=0xfeed, user=request.user, card=card,
+                                     comment="給" + user.get_full_name + " (" + user.username + ")")
+                    record.save()
+                    card.save()
+
+                    return render(
+                        request, "submit.html", {
+                            "content":("<h1>Submitted.</h1>"
+                                       "<meta http-equiv=\"refresh\" content=\"3; "
+                                       "url=\"/\">")})
+                else:
+                    return render(request, "player/feed.html", locals())

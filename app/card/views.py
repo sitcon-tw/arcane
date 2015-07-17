@@ -137,3 +137,7 @@ def gen(request):
                                "url=/card/" + card.cid + "\">")})
     else:
         raise PermissionDenied
+
+@login_required
+def feed(request, id=None):
+    pass

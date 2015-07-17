@@ -84,6 +84,7 @@ class History(models.Model):
         3: "關閉卡片",
         4: "啟動卡片",
         10: "獲得卡片",
+        0xfeed: "餵食卡片",
     }
 
     no = models.AutoField(primary_key=True)
