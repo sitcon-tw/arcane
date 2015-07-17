@@ -19,6 +19,7 @@ def card(request, id=None):
                                "<meta http-equiv=\"refresh\" content=\"3; url=/\">"),
                     "title":"錯誤！"}, status=404)
         retriever = card.capturer
+        host = request.META['HTTP_HOST']
         return render(request, "card/card.html", locals())
 
 

@@ -18,7 +18,7 @@
 <p style="font-size:20px">提領者：{{ card.capturer }}</p>
 {% endif %}
 
-<img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data={% url 'get' card.cid %}" />
+<img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=http%3A%2F%2F{{ host }}{% url 'get' card.cid %}" />
 
 {% autoescape off %}<p>{{ card.long_desc }}</p> {% endautoescape %}
 
