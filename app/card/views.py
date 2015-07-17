@@ -47,12 +47,18 @@ def edit(request, id=None):
         else:
             form = CardForm(request.POST)
             if form.is_valid():
+                action = 2
+                if card.active is not form.cleaned_data["active"]:
+                    if form.cleaned_data["active"]:
+                        action = 4
+                    else:
+                        action = 3
                 card.name = form.cleaned_data["name"]
                 card.value = form.cleaned_data["value"]
                 card.long_desc = form.cleaned_data["long_desc"]
                 card.active = form.cleaned_data["active"]
                 card.save()
-                record = History(action=2, user=request.user, card=card)
+                record = History(action=action, user=request.user, card=card)
                 record.save()
             return render(
                 request, "submit.html", {
