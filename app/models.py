@@ -53,7 +53,6 @@ class Card(models.Model):
                                 verbose_name="Value",
                                 help_text="The value of the points card.")
     active = models.BooleanField(default=True, verbose_name="Active?")
-    retrieved = models.BooleanField(default=False, verbose_name="Retrieved")
     name = models.CharField(
         max_length=32,
         verbose_name="Name",
@@ -75,6 +74,10 @@ class Card(models.Model):
         else:
             return (str(self.name) + " (" + str(self.cid) + "), "
                     "inactive, " + str(self.value) + " points.")
+
+    @property
+    def retrieved(self):
+        return self.capturer is not None
 
 
 class History(models.Model):

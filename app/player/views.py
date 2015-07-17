@@ -53,7 +53,6 @@ def feed(request, id=None):
                     card = form.cleaned_data["card"]
                     player.captured_card.add(card)
                     player.save()
-                    card.retrieved = True
                     card.save()
                     record = History(action=0xfeed, user=request.user, card=card,
                                      comment="給" + user.get_full_name + " (" + user.username + ")")
