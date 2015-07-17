@@ -33,7 +33,7 @@ class Player(models.Model):
 
     @property
     def points_acquired(self):
-        s = self.captured_card.all().aggregate(models.Sum('value'))
+        s = self.captured_card.filter(active=True).aggregate(models.Sum('value'))
         if s['value__sum'] is None:
             return 0
         return s['value__sum']
