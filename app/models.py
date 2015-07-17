@@ -79,11 +79,11 @@ class Card(models.Model):
 
 class History(models.Model):
     ACTION_CODE = {
-        1: "generate card",
-        2: "edit card",
-        3: "inactive the card",
-        4: "active a card",
-        10: "capture a card",
+        1: "建立卡片",
+        2: "編輯卡片",
+        3: "關閉卡片",
+        4: "啟動卡片",
+        10: "獲得卡片",
     }
 
     no = models.AutoField(primary_key=True)

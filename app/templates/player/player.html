@@ -19,7 +19,7 @@
     <tr>
     {% for record in records %}
         <td>{{ record.date | date:'m/d H:i' }}</td>
-        <td>{{ record.action }}</td>
+        <td>{{ record.action_explain }}</td>
         <td>從卡片 {{ record.card.name }} 中得到了 {{ record.card.value }} 分</td>
         <td>{{ record.comment }}</td>
     {% endfor %}
