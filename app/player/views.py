@@ -22,6 +22,7 @@ def player(request, id=None):
             return render(request, 'player/player.html',
                           {"user": user, "records": records})
 
+
 @login_required
 def feed(request, id=None):
     if not request.user.is_staff:
@@ -32,16 +33,14 @@ def feed(request, id=None):
         except ObjectDoesNotExist:
             return render(
                 request, "submit.html", {
-                    "content":("<h1>Wrong user</h1>"
-                               "<meta http-equiv=\"refresh\" content=\"3; url=/\">"),
-                    "title":"錯誤！"}, status=404)
+                    "content": "你是誰？",
+                    "title": "錯誤！"}, status=404)
 
         if not is_player(user):
             return render(
                 request, "submit.html", {
-                    "content":("<h1>Wrong user</h1>"
-                               "<meta http-equiv=\"refresh\" content=\"3; url=/\">"),
-                    "title":"錯誤！"}, status=404)
+                    "content": "工作人員的世界你是看不到的!",
+                    "title": "錯誤！"}, status=404)
         else:
             if not request.POST:
                 form = FeedForm()
@@ -62,8 +61,8 @@ def feed(request, id=None):
 
                     return render(
                         request, "submit.html", {
-                            "content":("<h1>Submitted.</h1>"
-                                       "<meta http-equiv=\"refresh\" content=\"3; "
-                                       "url=\"/\">")})
+                            "title": "成功發送",
+                            "content": "你送給 %d 一張卡片" % player.user.get_full_name(),
+                        })
                 else:
                     return render(request, "player/feed.html", locals())
