@@ -20,7 +20,9 @@
   {% endif %}
   &nbsp;&nbsp;
   <input type="button" onclick="location.href='{% url "edit card" card.cid %}'" value="編輯" /> &nbsp;&nbsp;
+  {% if not card.retrieved %}
   <input type="button" onclick="location.href='{% url "feed card" card.cid %}'" value="餵給" /> &nbsp;&nbsp;
+  {% endif %}
   {{ card.long_desc }}
 </li>
 {% endfor %}
