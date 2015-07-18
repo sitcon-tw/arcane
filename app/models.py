@@ -44,9 +44,11 @@ class Player(models.Model):
 
 
 class Card(models.Model):
+    def random():
+        return str(get_random_string(16))
     cid = models.CharField(max_length=16,
                            primary_key=True,
-                           default=get_random_string(16),
+                           default=random,
                            verbose_name="Card ID",
                            help_text="The unique ID for the points card.")
     value = models.IntegerField(default="1",
