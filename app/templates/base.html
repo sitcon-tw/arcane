@@ -16,14 +16,19 @@
     <link rel="stylesheet" href="{% static 'css/global.css' %}" /> 
  </head>
   <body>
-    <div>
-    {% include "topbar.html" %}
-    </div>
-    <div id="wrap">
 
-    <div id="divblock">
-    {% block content %}
+    <div id="header">
+        <div class="container">
+            {% include "topbar.html" %}
+        </div>
     </div>
+    
+
+    <div class="container">
+        <div class="col-lg-1"></div>
+        <div class="col-lg-10">
+        <div id="divblock">{% block content %}</div></div>
+        <div class="col-lg-1"><div>
     </div>
     <div>
     {% endblock %}

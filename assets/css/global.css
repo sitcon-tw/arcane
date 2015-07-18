@@ -1,6 +1,6 @@
 body {
   background-color: #f0f2f2;
-  
+  height=100%;
 } 
 .navbar-default {
   background-color: #121313;
@@ -63,13 +63,6 @@ body {
   }
 }
 #divblock {
+  font-size: 20px;
   margin-top: 90px;
-  float: left;
-  position: relative;
-  left: -50%;
-}
-#wrap {
-    float: left;
-    position: relative;
-    left: 50%;
-        }
+  float: center;}
