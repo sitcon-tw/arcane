@@ -9,7 +9,7 @@ from app.models import Card, History
 
 @login_required
 def dashboard(request):
-    if not request.is_staff:
+    if not request.user.is_staff:
         raise PermissionDenied
     players = data.Player.objects.all()
     cards = data.Card.objects.all()
