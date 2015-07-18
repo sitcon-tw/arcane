@@ -82,34 +82,25 @@ def get(request, id=None):
             card = Card.objects.get(cid=id)
         except ObjectDoesNotExist:
             return CardNotFound(request)
-        if not request.method == 'POST':
-            form = CardForm({
-                "name": card.name,
-                "value": card.value,
-                "long_desc": card.long_desc,
-                "active": card.active,
-                "retrieved": card.retrieved})
-            return render(request, "card/get.html", locals())
-        else:
-            if is_player(request.user):
-                # Add points
-                player = request.user.player
-                player.captured_card.add(card)
-                player.save()
-                card.retrieved = True
-                card.save()
-                record = History(action=10, user=request.user, card=card)
-                record.save()
+        if is_player(request.user):
+            # Add points
+            player = request.user.player
+            player.captured_card.add(card)
+            player.save()
+            card.retrieved = True
+            card.save()
+            record = History(action=10, user=request.user, card=card)
+            record.save()
 
-                return render(
-                    request, "submit.html", {
-                        "success": True,
-                        "title": "恭喜獲得 %d 點" % card.value,
-                        "content": "從 %s 中得到了 %d 點" % (card.name, card.value),
-                        "next_page": reverse('home')
-                    })
-            else:
-                raise PermissionDenied
+            return render(
+                request, "submit.html", {
+                    "success": True,
+                    "title": "恭喜獲得 %d 點" % card.value,
+                    "content": "從 %s 中得到了 %d 點" % (card.name, card.value),
+                    "next_page": reverse('home')
+                })
+        else:
+            raise PermissionDenied
 
 
 @login_required
