@@ -1,5 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
+from djanog.core.exceptions import PermissionDenied
 
 from app import models as data
 from app.staff.forms import FastSendForm
@@ -8,6 +9,8 @@ from app.models import Card, History
 
 @login_required
 def dashboard(request):
+    if not request.is_staff:
+        raise PermissionDenied
     players = data.Player.objects.all()
     cards = data.Card.objects.all()
     teams = data.Team.objects.all()
