@@ -1,6 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
-from djanog.core.exceptions import PermissionDenied
+from django.core.exceptions import PermissionDenied
 
 from app import models as data
 from app.staff.forms import FastSendForm
