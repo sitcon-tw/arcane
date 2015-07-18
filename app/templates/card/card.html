@@ -11,18 +11,18 @@
   {% elif not card.active and not card.retrieved %}
   尚未啟用
   {% else %}
-  已被領取
+  已被 {{ card.capturer}} 領取
   {% endif %}
 </p>
-{% if card.retrieved %}
-<p style="font-size:20px">提領者：{{ card.capturer }}</p>
-{% endif %}
 
-<img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data={% url 'get' card.cid %}" />
+{% if not card.retrieved %}
+<img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=http%3A%2F%2F{{ host }}{% url 'get' card.cid %}" />
+{% endif %}
 
 {% autoescape off %}<p>{{ card.long_desc }}</p> {% endautoescape %}
 
-{% if request.user.is_staff %}
+{% if request.user.is_staff and not card.retrieved %}
     <input type="button" onclick="location.href='{% url "edit card" card.cid %}'" value="編輯" />
+    <input type="button" onclick="location.href='{% url "feed card" card.cid %}'" value="餵給" />
 {% endif %}
 {% endblock %}

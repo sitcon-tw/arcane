@@ -1,8 +1,17 @@
-from app.card.forms import CardForm
+from app.card.forms import CardForm, FeedForm
 from app.models import Card, History, is_player
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
 from django.shortcuts import render
+from django.core.urlresolvers import reverse
+
+
+def CardNotFound(request):
+    return render(
+        request, "submit.html", {
+            "success": False,
+            "content": "不在系統中的卡片，可能是被註銷了，請戳戳工作人員吧",
+            "title": "不認識的卡片"}, status=404)
 
 
 @login_required
@@ -13,12 +22,9 @@ def card(request, id=None):
         try:
             card = Card.objects.get(cid=id)
         except ObjectDoesNotExist:
-            return render(
-                request, "submit.html", {
-                    "content":("<h1>Wrong card</h1>"
-                               "<meta http-equiv=\"refresh\" content=\"3; url=/\">"),
-                    "title":"錯誤！"}, status=404)
+            return CardNotFound(request)
         retriever = card.capturer
+        host = request.META['HTTP_HOST']
         return render(request, "card/card.html", locals())
 
 
@@ -30,12 +36,7 @@ def edit(request, id=None):
         try:
             card = Card.objects.get(cid=id)
         except ObjectDoesNotExist:
-            return render(
-                request, "submit.html", {
-                    "content":("<h1>Wrong card</h1>"
-                               "<meta http-equiv=\"refresh\" content=\"3; url=/\">"),
-                    "title":"錯誤！"}, status=404)
-
+            return CardNotFound(request)
         if not request.POST:
             form = CardForm(
                 {"name": card.name,
@@ -62,24 +63,25 @@ def edit(request, id=None):
                 record.save()
             return render(
                 request, "submit.html", {
-                    "content": ("<h1>Submitted.</h1>"
-                                "<meta http-equiv=\"refresh\" content=\"3; "
-                                "url=/card/" + card.cid + "\">")})
+                    "success": True,
+                    "title": "成功編輯",
+                    "content": "成功編輯卡片 %s" % card.name,
+                    "next_page": reverse('view card', args=[card.cid]),
+                    })
 
 
 def get(request, id=None):
     if not is_player(request.user):
-        raise PermissionDenied
+        return render(
+            request, "submit.html", {
+                "success": False,
+                "content": "你可能需要先掃描一下識別證上的 QR_Code 來登入系統",
+                "title": "未登入！"}, status=404)
     else:
         try:
             card = Card.objects.get(cid=id)
         except ObjectDoesNotExist:
-            return render(
-                request, "submit.html", {
-                    "content":("<h1>Wrong card</h1>"
-                               "<meta http-equiv=\"refresh\" content=\"3; url=/\">"),
-                    "title":"錯誤！"}, status=404)
-
+            return CardNotFound(request)
         if not request.method == 'POST':
             form = CardForm({
                 "name": card.name,
@@ -101,8 +103,11 @@ def get(request, id=None):
 
                 return render(
                     request, "submit.html", {
-                        "content": ("<h1>Submitted.</h1>"
-                                   "<meta http-equiv=\"refresh\" content=\"3; url=\"/\">")})
+                        "success": True,
+                        "title": "恭喜獲得 %d 點" % card.value,
+                        "content": "從 %s 中得到了 %d 點" % (card.name, card.value),
+                        "next_page": reverse('home')
+                    })
             else:
                 raise PermissionDenied
 
@@ -127,8 +132,61 @@ def gen(request):
                 record.save()
             return render(
                 request, "submit.html", {
-                    "content":("<h1>Submitted.</h1>"
-                               "<meta http-equiv=\"refresh\" content=\"3; "
-                               "url=/card/" + card.cid + "\">")})
+                    "success": True,
+                    "title": "一張卡片就此誕生！",
+                    "content": "生成了一張卡片 %s 含有 %d 點" % (card.name, card.value),
+                    "next_page": reverse('generate card'),
+                })
     else:
         raise PermissionDenied
+
+
+@login_required
+def feed(request, id=None):
+    if not request.user.is_staff:
+        raise PermissionDenied
+    else:
+        try:
+            card = Card.objects.get(cid=id)
+        except ObjectDoesNotExist:
+            return CardNotFound(request)
+
+        if not card.active or card.retrieved:
+            return render(
+                request, "submit.html", {
+                    "success": False,
+                    "title": "卡片已被捕獲",
+                    "content": "這張卡片已經被使用過囉，何不換張卡片呢？",
+                    })
+        else:
+            if not request.POST:
+                form = FeedForm()
+                return render(request, "card/feed.html", locals())
+            else:
+                form = FeedForm(request.POST)
+                if form.is_valid():
+                    player = form.cleaned_data["player"]
+                    card.retrieved = True
+                    card.capturer = player
+                    card.save()
+                    record_reciever = History(
+                        action=0xfeed, user=player.user, card=card,
+                        comment="從 %s 收到一張卡片" % request.user.get_full_name())
+                    record_reciever.save()
+                    record_sender = History(
+                        action=0xfeed, user=request.user, card=card,
+                        comment="給了 %s (%s)" % (player.user.get_full_name(), player.user.username))
+                    record_sender.save()
+                    return render(
+                        request, "submit.html", {
+                            "success": True,
+                            "title": "成功發送卡片",
+                            "content": "成功將卡片送給 %s 了！" % player.user.get_full_name(),
+                        })
+                else:
+                    return render(
+                        request, "submit.html", {
+                            "success": False,
+                            "title": "發送卡片失敗",
+                            "content": "要不要去戳戳系統管理員呢？"
+                        })

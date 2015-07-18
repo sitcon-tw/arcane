@@ -1,6 +1,12 @@
 {% extends 'base.html' %}
-{% block title %}{% if title %}{{ title }}{% else %}送出{% endif %}{% endblock %}
+{% block title%}{% if success %} 執行成功 {% else %} 錯誤 {% endif %} {% endblock %}
 
 {% block content %}
-{% autoescape off %}{{ content }}{% endautoescape %}
+    <h1>{{ title }}</h1>
+    {{ content }}
+{% if next_page %}
+    <p><a href="{{ next_page }}">轉身離去</a></p>
+{% else %}
+    <p><a href="{% url 'home' %}">轉身離去</a></p>
+{% endif %}
 {% endblock %}

@@ -6,31 +6,44 @@
 {% block content %}
 <h1>儀表板（？）</h1>
 <h2>卡片</h2>
+<input type="button" onclick="location.href='{% url "generate card" %}'" value="產生" />
+<input type="button" onclick="location.href='{% url "fast send" %}'" value="產生並發送" />
 <ul>
 {% for card in cards %}
-<li>{{ card.cid }} {{ card.name }} {{ card.value }} {{ card.active }} {{ card.retrieved }} {{ card.comment }}
-    <a href="{% url 'edit card' card.cid %}">Edit</a>
+<li><a href="{% url 'view card' card.cid %}">{{ card.name }} ({{ card.cid }}), {{ card.value }} 點</a>&nbsp;&nbsp;
+  {% if card.active and not card.retrieved %}
+  已啟用，尚未被領取
+  {% elif not card.active and not card.retrieved %}
+  尚未啟用
+  {% else %}
+  已被 {{ card.capturer }} 領取
+  {% endif %}
+  &nbsp;&nbsp;
+  <input type="button" onclick="location.href='{% url "edit card" card.cid %}'" value="編輯" /> &nbsp;&nbsp;
+  {% if not card.retrieved %}
+  <input type="button" onclick="location.href='{% url "feed card" card.cid %}'" value="餵給" /> &nbsp;&nbsp;
+  {% endif %}
+  {{ card.long_desc }}
 </li>
 {% endfor %}
 </ul>
 <h2>隊伍</h2>
 <ul>
 {% for team in teams %}
-<li>{{ team.name }} {{ team.points }}</li>
-{% endfor %}
-</ul>
-<h2>個人</h2>
+<li>{{ team.name }} ({{ team.tid }}), {{ team.points }} 點</li>
 <ul>
-{% for player in players %}
-<li>{{ player.user.get_full_name }} {{ player.points_acquired }}</li>
+  {% for player in team.player.all %}
+  <li>{{ player.user.get_full_name }} ({{ player.user.username }}), {{ player.points_acquired }} 點 <input type="button" onclick="location.href='{% url "feed player" player.user.username %}'" value="餵食" /></li>
+  {% endfor %}
+</ul>
 {% endfor %}
 </ul>
 
 <h2>Log</h2>
 <ul>
-{% for history in historys %}
-<li>{{ history.no }} {{ history.action_explain }} {{ history.user.get_full_name }}
-    {{ history.card.name }} {{ history.comment }} {{ history.date | date:'m/d H:i' }}</li>
+{% for entry in history_entries %}
+<li>{{ entry.date | date:'Y-m-d H:i:s' }} &nbsp; {{ entry.user.get_full_name }} ({{ entry.user.username }})&nbsp;&nbsp;{{ entry.action_explain }}:
+  {{ entry.card.name }} {{ entry.comment }}</li>
 {% endfor %}
 </ul>
 

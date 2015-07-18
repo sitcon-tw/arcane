@@ -33,7 +33,7 @@ class Player(models.Model):
 
     @property
     def points_acquired(self):
-        s = self.captured_card.all().aggregate(models.Sum('value'))
+        s = self.captured_card.filter(active=True).aggregate(models.Sum('value'))
         if s['value__sum'] is None:
             return 0
         return s['value__sum']
@@ -71,7 +71,7 @@ class Card(models.Model):
                     "active, " + str(self.value) + " points.")
         elif not self.active and self.retrieved:
             return (str(self.name) + " (" + str(self.cid) + "), "
-                    "retrieved by " + self.captured.get() + ", " + str(self.value) + " points.")
+                    "retrieved by " + str(self.capturer) + ", " + str(self.value) + " points.")
         else:
             return (str(self.name) + " (" + str(self.cid) + "), "
                     "inactive, " + str(self.value) + " points.")
@@ -84,6 +84,7 @@ class History(models.Model):
         3: "關閉卡片",
         4: "啟動卡片",
         10: "獲得卡片",
+        0xfeed: "餵食卡片",
     }
 
     no = models.AutoField(primary_key=True)

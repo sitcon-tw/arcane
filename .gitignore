@@ -56,6 +56,7 @@ static
 static/*
 db.sqlite3
 secret_key.py
+app/migrations/
 
 # Sphinx documentation
 docs/_build/
@@ -67,7 +68,4 @@ target/
 # vim
 *.swp
 
-
-# will remove after it's released
-app/migrations/
 
