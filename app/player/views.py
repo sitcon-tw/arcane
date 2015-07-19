@@ -27,7 +27,7 @@ def player(request, id=None):
                 if user.player.team.points == 0:
                     i.weight = 0
                 else:
-                    i.weight = i.points_acquired / user.player.team.points
+                    i.weight = i.points_acquired / user.player.team.points * 100
             return render(request, 'player/player.html', locals())
 
 
