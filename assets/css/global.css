@@ -1,6 +1,6 @@
 body {
   background-color: #f0f2f2;
-  
+  height=100%;
 } 
 .navbar-default {
   background-color: #121313;
@@ -62,14 +62,12 @@ body {
     background-color: #333333;
   }
 }
-#divblock {
-  margin-top: 90px;
-  float: left;
-  position: relative;
-  left: -50%;
+#tablestyle{
+padding:2px 5px 2px 5px;
+
+
 }
-#wrap {
-    float: left;
-    position: relative;
-    left: 50%;
-        }
+#divblock {
+  font-size: 20px;
+  margin-top: 90px;
+  float: center;}
