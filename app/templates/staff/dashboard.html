@@ -44,9 +44,9 @@
   {% endif %}
   </td>
   <td>
-  <input type="button" onclick="location.href='{% url "edit card" card.cid %}'" value="編輯" class="btn btn-info"/> 
   {% if not card.retrieved %}
-  <input type="button" onclick="location.href='{% url "feed card" card.cid %}'" value="餵給" class="btn btn-primary"/> 
+  <input type="button" onclick="location.href='{% url "edit card" card.cid %}'" value="編輯" class="btn btn-info"/>
+  <input type="button" onclick="location.href='{% url "feed card" card.cid %}'" value="餵給" class="btn btn-primary"/>
   {% endif %}
   </td>
 </tr>
@@ -64,7 +64,7 @@
 <li>{{ team.name }} ({{ team.tid }}), {{ team.points }} 點</li>
 <ul>
   {% for player in team.player.all %}
-  <li>{{ player.user.get_full_name }} ({{ player.user.username }}), {{ player.points_acquired }} 點 <input type="button" onclick="location.href='{% url "feed player" player.user.username %}'" value="餵食" class="btn btn-primary"/></li>
+  <li>{{ player.user.get_full_name }} ({{ player.user.username }}), {{ player.points_acquired }} 點</li>
   {% endfor %}
 </ul>
 </td></tr>
