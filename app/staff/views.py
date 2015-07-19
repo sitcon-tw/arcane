@@ -44,7 +44,7 @@ def lite(request, tt=None):
                 })
         with transaction.atomic():
             card = Card()
-            denomination = [128, 256, 512]
+            denomination = [64, 128, 256]
             card.value = denomination[tt]
             card.active = True
             card.retrieved = False
