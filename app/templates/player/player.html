@@ -124,7 +124,7 @@ var counter = 0;
         <th id="tablestyle" >詳細資料</th>
         <th id="tablestyle">註解</th>
     </tr>
-    {% for record in records|dictsort:"date" reversed %}
+    {% for record in this_records|dictsort:"date" reversed %}
     <tr>
         <td id="tablestyle">{{ record.date | date:'m/d H:i' }}</td>
         <td id="tablestyle">{{ record.action_explain }}</td>
