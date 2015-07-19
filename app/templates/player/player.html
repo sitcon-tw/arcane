@@ -9,17 +9,17 @@
 {% if records %}
 <table>
     <tr>
-        <th>時間</th>
-        <th>行動類別</th>
-        <th>詳細資料</th>
-        <th>註解</th>
+        <th id="tablestyle">時間</th>
+        <th id="tablestyle">行動類別</th>
+        <th id="tablestyle" >詳細資料</th>
+        <th id="tablestyle">註解</th>
     </tr>
     {% for record in records %}
     <tr>
-        <td>{{ record.date | date:'m/d H:i' }}</td>
-        <td>{{ record.action_explain }}</td>
-        <td>從卡片 {{ record.card.name }} 中得到了 {{ record.card.value }} 分</td>
-        <td>{{ record.comment }}</td>
+        <td id="tablestyle">{{ record.date | date:'m/d H:i' }}</td>
+        <td id="tablestyle">{{ record.action_explain }}</td>
+        <td id="tablestyle">從卡片 {{ record.card.name }} 中得到了 {{ record.card.value }} 分</td>
+        <td id="tablestyle">{{ record.comment }}</td>
     </tr>
     {% endfor %}
 </table>
