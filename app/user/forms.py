@@ -3,10 +3,7 @@ from django.contrib.auth.forms import PasswordChangeForm as auth_pwchg_form
 
 
 class LoginForm(forms.Form):
-    password = forms.CharField(
-        label="勇者密碼",
-        widget=forms.PasswordInput(),
-        help_text="應該會在識別證的前後左右 :)")
+    password = forms.CharField()
 
 
 class ChangeNameForm(forms.Form):
