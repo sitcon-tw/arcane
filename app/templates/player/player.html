@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block title %}{{ user.player.team.name }}{% endblock %}
-
 {% block content %}
+<div class="well">
 <h1>{{ user.player.team.name }} <span style="font-size:25px">{{ user.get_full_name }}</span></h1>
 <p style="font-size:32px">{{ user.player.team.points }} <span style="font-size:20px">點</span></p>
 
@@ -10,7 +10,18 @@
 {% endfor %}
 
 {% if records %}
-<table>
+<div class="panel-group"  id="accordion">  
+    <div class="panel panel-default">   
+        <div class="panel-heading">  
+            <div class="panel-title">  
+                <a href="#panel1" class="panel-toggle" data-toggle="collapse" data-parent="#accordion">  
+                    展開或是收起詳細紀錄
+                </a>  
+            </div>  
+        </div>  
+        <div id="panel1" class="panel-collapse collapse">  
+            <div class="panel-body">  
+ <table class="table"> 
     <tr>
         <th id="tablestyle">時間</th>
         <th id="tablestyle">行動類別</th>
@@ -25,6 +36,10 @@
         <td id="tablestyle">{{ record.comment }}</td>
     </tr>
     {% endfor %}
-</table>
+</table>    
+</div>   
+</div>   
+</div>
+</div>
 {% endif %}
 {% endblock %}
