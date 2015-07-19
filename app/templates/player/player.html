@@ -2,12 +2,13 @@
 {% block title %}{{ user.player.team.name }}{% endblock %}
 {% block content %}
 
-<script type="Text/JavaScript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6/jquery.min.js"></script... type='text/javascript'>
-$(function(){
+<script type="Text/JavaScript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6/jquery.min.js"></script>
+<script type='text/javascript'>
+$(document).ready(function(){
  var back = ["#65D122", "#428BCA", "#c941be", "#615560", "#8be874", "f6faa3"];
  var counter = 0; 
    $(".pb").each(function(){
-    this.css({
+    $(this).css({
     'background-image': 'none',
     'background-color': back[counter]
     });
@@ -51,7 +52,7 @@ $(function(){
 </table>
 <div class="progress" id="stack">
 {% for each_player in sorted_players %}
-<div class="progress-bar progress-bar-success pb" style="width: {{ each_player.weigh}}}% " >
+<div class="progress-bar progress-bar-success pb" style="width: {{ each_player.weight|floatformat:0}}%; " >
       <span></span>
   </div>
 {% endfor %}
