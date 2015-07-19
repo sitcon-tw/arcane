@@ -6,8 +6,8 @@
 $(function(){
  var back = ["#65D122", "#428BCA", "#c941be", "#615560", "#8be874", "f6faa3"];
  var counter = 0; 
-   $("div[id^='pb']").each(function(){
-    $('#pb').css({
+   $(".pb").each(function(){
+    this.css({
     'background-image': 'none',
     'background-color': color[counter]
     });
@@ -51,8 +51,8 @@ $(function(){
 </table>
 <div class="progress" id="slack">
 {% for each_player in sorted_players %}
-  <div id="pb" class="progress-bar progress-bar-success" style="width: {{ each_player.weight}} " >
-    <span class="sr-only">35% Complete (success)</span>
+  <div class="pb progress-bar progress-bar-success" style="width: {{ each_player.weight}} " >
+    <span class="sr-only"></span>
   </div>
 {% endfor %}
   </div>
