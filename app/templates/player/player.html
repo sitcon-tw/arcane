@@ -5,9 +5,11 @@
 <h1>{{ user.player.team.name }} <span style="font-size:25px">{{ user.get_full_name }}</span></h1>
 <p style="font-size:32px">{{ user.player.team.points }} <span style="font-size:20px">點</span></p>
 
+<div>
 {% for players in user.player.team.player.all %}
-<p> <b>{{ players.user.get_full_name }}</b>: {{ players.points_acquired }} 點</p>
+<p><span title="{{ players.user.username }}"> <b>{{ players.user.get_full_name }}</b></span>: {{ players.points_acquired }} 點</p>
 {% endfor %}
+</div>
 
 {% if records %}
 <div class="panel-group"  id="accordion">  
