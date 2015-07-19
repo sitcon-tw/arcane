@@ -71,7 +71,44 @@ var counter = 0;
 <p>（你貢獻了：{{ user.player.points_acquired }} 點）</p>
 {% endif %}
 
+{% if fun %}
 {% if records %}
+<div class="panel-group"  id="accordion">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div class="panel-title">
+                <a href="#panel1" class="panel-toggle" data-toggle="collapse" data-parent="#accordion">
+                    展開或是收起詳細紀錄
+                </a>
+            </div>
+        </div>
+        <div id="panel1" class="panel-collapse collapse">
+            <div class="panel-body">
+ <table class="table">
+    <tr>
+        <th id="tablestyle">時間</th>
+        <th id="tablestyle">隊員</th>
+        <th id="tablestyle">行動類別</th>
+        <th id="tablestyle" >詳細資料</th>
+        <th id="tablestyle">註解</th>
+    </tr>
+    {% for record in records|dictsort:"date" reversed %}
+    <tr>
+        <td id="tablestyle">{{ record.date | date:'m/d H:i' }}</td>
+        <td id="tablestyle">{{ record.user.last_name }}</td>
+        <td id="tablestyle">{{ record.action_explain }}</td>
+        <td id="tablestyle">從卡片 {{ record.card.name }} 中得到了 {{ record.card.value }} 分</td>
+        <td id="tablestyle">{{ record.comment }}</td>
+    </tr>
+    {% endfor %}
+</table>
+</div>
+</div>
+</div>
+</div>
+{% endif %}
+{% else %}
+{% if this_records %}
 <div class="panel-group"  id="accordion">
     <div class="panel panel-default">
         <div class="panel-heading">
@@ -90,7 +127,7 @@ var counter = 0;
         <th id="tablestyle" >詳細資料</th>
         <th id="tablestyle">註解</th>
     </tr>
-    {% for record in records|dictsort:"date" reversed %}
+    {% for record in this_records|dictsort:"date" reversed %}
     <tr>
         <td id="tablestyle">{{ record.date | date:'m/d H:i' }}</td>
         <td id="tablestyle">{{ record.action_explain }}</td>
@@ -103,5 +140,6 @@ var counter = 0;
 </div>
 </div>
 </div>
+{% endif %}
 {% endif %}
 {% endblock %}
