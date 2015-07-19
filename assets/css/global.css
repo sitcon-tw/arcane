@@ -64,10 +64,13 @@ body {
 }
 #tablestyle{
 padding:2px 5px 2px 5px;
-
-
 }
 #divblock {
   font-size: 20px;
   margin-top: 90px;
   float: center;}
+#progresspercent {
+  width : calc({{ each_player.points_acquired }} / {{ user.player.team.points }}  * 100%) ;
+
+
+}

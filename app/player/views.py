@@ -1,9 +1,11 @@
+import operator
 from app.models import Card, History, is_player
 from app.player.forms import FeedForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
 from django.shortcuts import redirect, render
+from django.db import transaction
 
 
 def player(request, id=None):
@@ -18,9 +20,10 @@ def player(request, id=None):
             raise PermissionDenied
         else:
             user = request.user
+            sorted_players = list(user.player.team.player.all())
+            sorted_players.sort(key=lambda x: x.points_acquired, reverse=True)
             records = History.objects.filter(user=user)
-            return render(request, 'player/player.html',
-                          {"user": user, "records": records})
+            return render(request, 'player/player.html', locals())
 
 
 @login_required
@@ -48,16 +51,20 @@ def feed(request, id=None):
             else:
                 form = FeedForm(request.POST)
                 if form.is_valid():
-                    player = user.player
-                    card = form.cleaned_data["card"]
-                    player.captured_card.add(card)
-                    player.save()
-                    card.retrieved = True
-                    card.save()
-                    record = History(action=0xfeed, user=request.user, card=card,
-                                     comment="給" + user.get_full_name() + " (" + user.username + ")")
-                    record.save()
-                    card.save()
+                    with transaction.atomic():
+                        player = user.player
+                        card = form.cleaned_data["card"]
+                        card.capturer = player
+                        card.retrieved = True
+                        card.save()
+                        record_sender = History(
+                            action=0xfeed, user=request.user, card=card,
+                            comment="給了 %s (%s)" % (player.user.get_full_name(), player.user.username))
+                        record_sender.save()
+                        record_reciever = History(
+                            action=0xfeed, user=player.user, card=card,
+                            comment="從 %s 收到一張卡片" % request.user.get_full_name())
+                        record_reciever.save()
 
                     return render(
                         request, "submit.html", {
