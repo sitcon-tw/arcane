@@ -20,8 +20,12 @@ def player(request, id=None):
         else:
             user = request.user
             records = History.objects.filter(user=user)
-            return render(request, 'player/player.html',
-                          {"user": user, "records": records})
+            players = user.player.team.player.all()
+            for i in players:
+                i.weight = i.points_acquired / user.team.point
+            return render(request, 'player/player.html', {
+                "user": user, "records": records, "players": players
+            })
 
 
 @login_required
