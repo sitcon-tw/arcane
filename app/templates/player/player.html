@@ -15,48 +15,55 @@ $(document).ready(function(){
      counter++;
      counter = counter % back.length
   });
+var counter = 0; 
+   $(".pb1").each(function(){
+    $(this).css({
+    'background-image': 'none',
+    'background-color': back[counter]
+    });
+     counter++;
+     counter = counter % back.length
+  });
 });
 </script>
 <div class="well">
 <h1>{{ user.player.team.name }} <span style="font-size:25px" class="badge">{{ user.player.team.points }} 點</span></h1>
 <div>
 <table class="table" style="font-size:16px" id="percentclac" >
-<tr><td><span style="font-weight: bold;">積分統計</span></td>
-<td>
-<span style="font-size:14px" class="badge">100.0%</span>
-</td>
-<td>
-<div class="progress">
-  <div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
-    <span style="color:#000;">{{ user.player.team.points }} / {{ user.player.team.points }}</span>
+  <tr>
+    <td>
+      <span>積分比例表</span>
+    </td>
+  </tr>
+<tr>
+ <td>
+  <div class="progress" id="stack">
+    {% for each_player in sorted_players %}
+      <div class="progress-bar progress-bar-success pb" style="width: {{ each_player.weight|floatformat:0}}%; " >
+             <span style="color:#000;">{{ each_player.user.last_name }} </span>
+      </div>
+    {% endfor %}
   </div>
-</div>
-</td></tr>
+</td>
+</tr>
 {% for each_player in sorted_players %}
 <tr>
     <td>
-        <span style="font-weight: bold;">{{ each_player.user.get_full_name }}</span>
+        <span>{{ each_player.user.last_name }}</span>
     </td>
-    <td>
-        <span style="font-size:14px" class="badge">{{ each_player.weight|floatformat:1 }}%</span>
-    </td>
+</tr>
+<tr>
     <td>
         <div class="progress">
-          <div class="progress-bar progress-bar-danger progress-bar-striped active" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" style="width : calc({{ each_player.points_acquired }} / {{ user.player.team.points }}  * 100%);">
-            <span style="color:#000;">{{ each_player.points_acquired }} / {{ user.player.team.points }}</span>
+          <div class="progress-bar progress-bar-danger pb1" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" style="width : calc({{ each_player.points_acquired }} / {{ user.player.team.points }}  * 100%);">
+             <span style="color:#000;">{{ each_player.points_acquired }} / {{ user.player.team.points }}</span>
           </div>
         </div>
     </td>
 </tr>
 {% endfor %}
+
 </table>
-<div class="progress" id="stack">
-{% for each_player in sorted_players %}
-<div class="progress-bar progress-bar-success pb" style="width: {{ each_player.weight|floatformat:0}}%; " >
-      <span></span>
-  </div>
-{% endfor %}
-  </div>
 </div>
 {% if records %}
 <div class="panel-group"  id="accordion">  
