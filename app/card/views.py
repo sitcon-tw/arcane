@@ -135,7 +135,7 @@ def gen(request):
                     "success": True,
                     "title": "一張卡片就此誕生！",
                     "content": "生成了一張卡片 %s 含有 %d 點" % (card.name, card.value),
-                    "next_page": reverse('generate card'),
+                    "next_page": reverse('home'),
                 })
     else:
         raise PermissionDenied
