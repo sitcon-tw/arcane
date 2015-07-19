@@ -23,6 +23,11 @@ def player(request, id=None):
             sorted_players = list(user.player.team.player.all())
             sorted_players.sort(key=lambda x: x.points_acquired, reverse=True)
             records = History.objects.filter(user=user)
+            for i in sorted_players:
+                if user.player.team.points == 0:
+                    i.weight = 0
+                else:
+                    i.weight = i.points_acquired / user.player.team.points * 100
             return render(request, 'player/player.html', locals())
 
 

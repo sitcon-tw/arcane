@@ -2,10 +2,40 @@
 {% block title %}點數卡{% endblock %}
 
 {% block content %}
-<h1>點數卡 <span style="font-size:25px">{{ card.name }}</span></h1>
-<p style="font-size:25px">{{ card.cid }}</p>
-<p style="font-size:32px">{{ card.value }} <span style="font-size:20px">點</span></p>
-<p style="font-size:20px">
+<div class="well">
+
+
+<h1>點數卡 <span style="font-size:18px" > 卡片名稱：{{ card.name }}</span></h1>
+<div class="panel panel-default">
+  <div class="panel-heading">
+<br>
+{% if not card.retrieved %}
+<img  style="display:block; margin:auto;" src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=http%3A%2F%2F{{ host }}{% url 'get' card.cid %}" />
+{% endif %}
+</br>
+  </div>
+<table class="table">
+<tr>
+<td>
+<p style="font-size:22px">  卡片ID： </p>
+</td>
+<td>
+<p style="font-size:22px">{{ card.cid }}</p>
+</td>
+</tr>
+<td>
+<p style="font-size:22px">  卡片價值： </p>
+</td>
+<td>
+<p style="font-size:22px">{{ card.value }} <span style="font-size:20px">點</span></p>
+</td>
+</tr>
+<tr>
+<td>
+<p style="font-size:22px"> 卡片狀態： </p>
+</td>
+<td>
+<p style="font-size:22px"> 
   {% if card.active and not card.retrieved %}
   已啟用，尚未被領取
   {% elif not card.active and not card.retrieved %}
@@ -14,15 +44,31 @@
   已被 {{ card.capturer}} 領取
   {% endif %}
 </p>
-
-{% if not card.retrieved %}
-<img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=http%3A%2F%2F{{ host }}{% url 'get' card.cid %}" />
-{% endif %}
-
-{% autoescape off %}<p>{{ card.long_desc }}</p> {% endautoescape %}
+</td>
+</tr>
+<tr>
+<td>
+<p style="font-size:22px"> 卡片敘述： </p>
+</td>
+<td>
+<p style="font-size:22px"> 
+{% autoescape off %}<p style="font-size:22px"> {{ card.long_desc }} </p> {% endautoescape %}
+</p>
+</td>
+</tr>
+</table>
+<div class="btn-group btn-group-justified" role="group">
+<a class="btn btn-primary" role="button" href="#" style="font-size:26px">轉身離去</a>
+</div>
+<br style="font-size:22px">
+</div>
 
 {% if request.user.is_staff and not card.retrieved %}
     <input type="button" onclick="location.href='{% url "edit card" card.cid %}'" value="編輯" />
     <input type="button" onclick="location.href='{% url "feed card" card.cid %}'" value="餵給" />
 {% endif %}
+
+</div>
 {% endblock %}
+
+

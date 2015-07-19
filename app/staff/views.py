@@ -1,7 +1,8 @@
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.core.exceptions import PermissionDenied
 from django.db import transaction
+from django.contrib.auth.models import Group
 
 from app import models as data
 from app.staff.forms import FastSendForm
@@ -12,11 +13,49 @@ from app.models import Card, History
 def dashboard(request):
     if not request.user.is_staff:
         raise PermissionDenied
+    if Group.objects.get(name='worker') in request.user.groups.all():
+        return redirect('lite')
     players = data.Player.objects.all()
     cards = data.Card.objects.all()
     teams = data.Team.objects.all()
     history_entries = data.History.objects.all()
     return render(request, 'staff/dashboard.html', locals())
+
+
+@login_required
+def lite(request, tt=None):
+    if tt is not None:
+        try:
+            tt = int(tt)
+        except:
+            return render(
+                request, "submit.html", {
+                    "success": False,
+                    "title": "發送卡片失敗",
+                    "content": "我幫你綁好繩子了，"
+                    "你要自己跳還是我推你跳呢？（本繩載重20g）"})
+        if tt not in [0, 1, 2]:
+            return render(
+                request, "submit.html", {
+                    "success": False,
+                    "title": "發送卡片失敗",
+                    "content": "要不要去戳戳系統管理員呢？"
+                    "(如果是POST奇怪的資料，可能會收到彈力繩喔ˊ_>ˋ)"
+                })
+        with transaction.atomic():
+            card = Card()
+            denomination = [64, 128, 256]
+            card.name = "來自 %s 的 %s" % (request.user.last_name, request.user.first_name)
+            card.value = denomination[tt]
+            card.active = True
+            card.retrieved = False
+            card.issuer = request.user
+            card.save()
+            record = History(action=10, user=request.user, card=card)
+            record.save()
+        return redirect('view card', card.cid)
+    else:
+        return render(request, 'staff/lite.html')
 
 
 @login_required
