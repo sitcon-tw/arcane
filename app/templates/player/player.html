@@ -46,6 +46,7 @@ var counter = 0;
 </td>
 </tr>
 {% for each_player in sorted_players %}
+{% if not each_player.points_acquired == 0 %}
 <tr>
     <td>
         <span>{{ each_player.user.last_name }}</span>
@@ -60,6 +61,7 @@ var counter = 0;
         </div>
     </td>
 </tr>
+{% endif %}
 {% endfor %}
 
 </table>

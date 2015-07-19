@@ -22,7 +22,9 @@ def player(request, id=None):
             user = request.user
             sorted_players = list(user.player.team.player.all())
             sorted_players.sort(key=lambda x: x.points_acquired, reverse=True)
-            records = History.objects.filter(user=user)
+            records = []
+            for player_i in user.player.team.player.all():
+                records = records + list(History.objects.filter(user=player_i.user))
             for i in sorted_players:
                 if user.player.team.points == 0:
                     i.weight = 0
