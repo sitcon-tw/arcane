@@ -93,7 +93,7 @@ def get(request, id=None):
             return CardNotFound(request)
 
         if is_player(request.user):
-            if not card.retrieved or card.active:
+            if not card.retrieved and card.active:
                 # Add points
                 with transaction.atomic():
                     player = request.user.player
@@ -103,6 +103,7 @@ def get(request, id=None):
                     card.save()
                     record = History(action=10, user=request.user, card=card)
                     record.save()
+                abscardvalue = abs(card.value)
                 return render(
                     request, "card/get.html", locals())
             else:

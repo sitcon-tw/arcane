@@ -24,6 +24,8 @@ def dashboard(request):
 
 @login_required
 def lite(request, tt=None):
+    if not request.user.is_staff:
+        raise PermissionDenied
     if tt is not None:
         try:
             tt = int(tt)
@@ -45,7 +47,10 @@ def lite(request, tt=None):
         with transaction.atomic():
             card = Card()
             denomination = [64, 128, 256]
-            card.name = "來自 %s 的 %s" % (request.user.last_name, request.user.first_name)
+            present = request.user.first_name
+            if not present:
+                present = '祝福'
+            card.name = "來自 %s 的 %s" % (request.user.last_name, present)
             card.value = denomination[tt]
             card.active = True
             card.retrieved = False
@@ -60,6 +65,8 @@ def lite(request, tt=None):
 
 @login_required
 def gift(request):
+    if not request.user.is_staff:
+        raise PermissionDenied
     if request.method == 'GET':
         return render(request, 'staff/gift.html', {"form": FastSendForm()})
     else:
