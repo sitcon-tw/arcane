@@ -1,7 +1,22 @@
 {% extends 'base.html' %}
 {% block title %}{{ user.player.team.name }}{% endblock %}
 {% block content %}
-<script>
+
+<script type="Text/JavaScript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6/jquery.min.js"></script... type='text/javascript'>
+$(function(){
+ var back = ["#65D122", "#428BCA", "#c941be", "#615560", "#8be874", "f6faa3"];
+ var counter = 0; 
+   $("div[id^='pb']").each(function(){
+    $('#pb').css({
+    'background-image': 'none',
+    'background-color': color[counter]
+    });
+     counter++;
+     if(counter == colours.length) {
+          counter = 0;
+      }
+  });
+});
 </script>
 <div class="well">
 <h1>{{ user.player.team.name }} <span style="font-size:25px" class="badge">{{ user.player.team.points }} 點</span></h1>
@@ -36,7 +51,7 @@
 </table>
 <div class="progress" id="slack">
 {% for each_player in sorted_players %}
-  <div class="progress-bar progress-bar-success" style="width: {{ each_player.weight}} ">
+  <div id="pb" class="progress-bar progress-bar-success" style="width: {{ each_player.weight}} " >
     <span class="sr-only">35% Complete (success)</span>
   </div>
 {% endfor %}
