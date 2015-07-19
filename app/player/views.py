@@ -62,7 +62,7 @@ def feed(request, id=None):
                     return render(
                         request, "submit.html", {
                             "title": "成功發送",
-                            "content": "你送給 %d 一張卡片" % player.user.get_full_name(),
+                            "content": "你送給 %s 一張卡片" % player.user.get_full_name(),
                         })
                 else:
                     return render(request, "player/feed.html", locals())
