@@ -6,20 +6,20 @@
 {% block content %}
 <div class="well">
 <h1>儀表板（？）</h1>
+<input type="button" onclick="location.href='{% url "generate card" %}'" value="產生卡片" class="btn btn-primary"/>
+<input type="button" onclick="location.href='{% url "fast send" %}'" value="快速發送" class="btn btn-primary"/>
 <h2>卡片</h2>
-<input type="button" onclick="location.href='{% url "generate card" %}'" value="產生" class="btn btn-primary"/>
-<input type="button" onclick="location.href='{% url "fast send" %}'" value="產生並發送" class="btn btn-primary"/>
 <br></br>
-<div class="panel-group"  id="accordion">  
-    <div class="panel panel-default">   
-        <div class="panel-heading">  
-            <div class="panel-title">  
-                <a href="#panel1" class="panel-toggle" data-toggle="collapse" data-parent="#accordion">  
+<div class="panel-group"  id="accordion">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div class="panel-title">
+                <a href="#panel1" class="panel-toggle" data-toggle="collapse" data-parent="#accordion">
                     展開或是收起卡片
-                </a>  
-            </div>  
-        </div>  
-        <div id="panel1" class="panel-collapse collapse"> 
+                </a>
+            </div>
+        </div>
+        <div id="panel1" class="panel-collapse collapse">
 <div class="panel-body">
 <table class="table">
     <tr>
