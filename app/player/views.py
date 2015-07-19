@@ -1,3 +1,4 @@
+import operator
 from app.models import Card, History, is_player
 from app.player.forms import FeedForm
 from django.contrib.auth.decorators import login_required
@@ -18,9 +19,10 @@ def player(request, id=None):
             raise PermissionDenied
         else:
             user = request.user
+            sorted_players = list(user.player.team.player.all())
+            sorted_players.sort(key=lambda x: x.points_acquired, reverse=True)
             records = History.objects.filter(user=user)
-            return render(request, 'player/player.html',
-                          {"user": user, "records": records})
+            return render(request, 'player/player.html', locals())
 
 
 @login_required
