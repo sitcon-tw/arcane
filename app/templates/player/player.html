@@ -2,11 +2,10 @@
 {% block title %}{{ user.player.team.name }}{% endblock %}
 {% block content %}
 
-<script type="Text/JavaScript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6/jquery.min.js"></script>
 <script type='text/javascript'>
 $(document).ready(function(){
  var back = ["#65D122", "#428BCA", "#c941be", "#615560", "#8be874", "f6faa3"];
- var counter = 0; 
+ var counter = 0;
    $(".pb").each(function(){
     $(this).css({
     'background-image': 'none',
@@ -15,7 +14,7 @@ $(document).ready(function(){
      counter++;
      counter = counter % back.length
   });
-var counter = 0; 
+var counter = 0;
    $(".pb1").each(function(){
     $(this).css({
     'background-image': 'none',
@@ -66,18 +65,18 @@ var counter = 0;
 </table>
 </div>
 {% if records %}
-<div class="panel-group"  id="accordion">  
-    <div class="panel panel-default">   
-        <div class="panel-heading">  
-            <div class="panel-title">  
-                <a href="#panel1" class="panel-toggle" data-toggle="collapse" data-parent="#accordion">  
+<div class="panel-group"  id="accordion">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div class="panel-title">
+                <a href="#panel1" class="panel-toggle" data-toggle="collapse" data-parent="#accordion">
                     展開或是收起詳細紀錄
-                </a>  
-            </div>  
-        </div>  
-        <div id="panel1" class="panel-collapse collapse">  
-            <div class="panel-body">  
- <table class="table"> 
+                </a>
+            </div>
+        </div>
+        <div id="panel1" class="panel-collapse collapse">
+            <div class="panel-body">
+ <table class="table">
     <tr>
         <th id="tablestyle">時間</th>
         <th id="tablestyle">行動類別</th>
@@ -92,9 +91,9 @@ var counter = 0;
         <td id="tablestyle">{{ record.comment }}</td>
     </tr>
     {% endfor %}
-</table>    
-</div>   
-</div>   
+</table>
+</div>
+</div>
 </div>
 </div>
 {% endif %}
