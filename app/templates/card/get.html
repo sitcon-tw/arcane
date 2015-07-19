@@ -3,7 +3,7 @@
 
 {% block content %}
 <h1>尋獲點數卡！</h1>
-<h2>{{ card.name }} <span style="text-size: 20px;">{% if card.value >0 %}獲得{% else %}減少{% endif %}了 {{ abscardvalue }} 點</span></h2>
+<h2>{{ card.name }} <span style="text-size: 20px;">{% if card.value > 0 %}獲得{% else %}減少{% endif %}了 {{ abscardvalue }} 點</span></h2>
 <p>{% autoescape off %}{{ card.long_desc }}{% endautoescape %}</p>
 
 <div class="btn-group btn-group-justified" role="group">
