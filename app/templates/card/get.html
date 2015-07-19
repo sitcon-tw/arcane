@@ -2,15 +2,12 @@
 {% block title %}點數卡{% endblock %}
 
 {% block content %}
-{% if card.retrieved %}
-<h1>這張卡已經被人領取過了喔</h1>
-<h2>{{ card.name }}</h2>
-<a href="{% url 'home' %}">Back</a>
-{% else %}
-<h1>恭喜獲得點數卡</h1>
-<h2>{{ card.name }}</h2>
+<h1>恭喜獲得點數卡！</h1>
+<h3>{{ card.name }}</h3>
 <p>{% autoescape off %}{{ card.long_desc }}{% endautoescape %}</p>
 
-<form action="/card/get/{{ card.cid }}" method="post">{% csrf_token %}<input type="submit" value="取得" /></form>
-{% endif %}
+<div class="btn-group btn-group-justified" role="group">
+    <a class="btn btn-primary" role="button" href="{% url 'home' %}" style="font-size:26px">轉身離去</a>
+</div>
+
 {% endblock %}

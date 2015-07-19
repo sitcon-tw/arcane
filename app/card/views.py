@@ -104,12 +104,7 @@ def get(request, id=None):
                     record = History(action=10, user=request.user, card=card)
                     record.save()
                 return render(
-                    request, "submit.html", {
-                        "success": True,
-                        "title": "恭喜獲得 %d 點" % card.value,
-                        "content": "從 %s 中得到了 %d 點" % (card.name, card.value),
-                        "next_page": reverse('home')
-                    })
+                    request, "card/get.html", locals())
             else:
                 return render(
                     request, "submit.html", {
@@ -145,7 +140,7 @@ def gen(request):
                         "success": True,
                         "title": "一張卡片就此誕生！",
                         "content": "生成了一張卡片 %s 含有 %d 點" % (card.name, card.value),
-                        "next_page": reverse('generate card'),
+                        "next_page": reverse('view card', args=[card.cid]),
                     })
             else:
                 return render(
