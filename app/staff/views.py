@@ -13,7 +13,7 @@ from app.models import Card, History
 def dashboard(request):
     if not request.user.is_staff:
         raise PermissionDenied
-    if Group.objects.get('worker') in request.user.groups.all():
+    if Group.objects.get(name='worker') in request.user.groups.all():
         return redirect('lite')
     players = data.Player.objects.all()
     cards = data.Card.objects.all()
@@ -24,8 +24,17 @@ def dashboard(request):
 
 @login_required
 def lite(request, tt=None):
-    if request.method == 'POST':
-        if tt not in [1, 2, 3]:
+    if tt is not None:
+        try:
+            tt = int(tt)
+        except:
+            return render(
+                request, "submit.html", {
+                    "success": False,
+                    "title": "發送卡片失敗",
+                    "content": "我幫你綁好繩子了，"
+                    "你要自己跳還是我推你跳呢？（本繩載重20g）"})
+        if tt not in [0, 1, 2 ]:
             return render(
                 request, "submit.html", {
                     "success": False,
