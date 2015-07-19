@@ -27,6 +27,7 @@ var counter = 0;
 </script>
 <div class="well">
 <h1>{{ user.player.team.name }} <span style="font-size:25px" class="badge">{{ user.player.team.points }} 點</span></h1>
+{% if fun %}
 <div>
 <table class="table" style="font-size:16px" id="percentclac" >
   <tr>
@@ -66,6 +67,10 @@ var counter = 0;
 
 </table>
 </div>
+{% else %}
+<p>（你貢獻了：{{ user.player.points_acquired }} 點）</p>
+{% endif %}
+
 {% if records %}
 <div class="panel-group"  id="accordion">
     <div class="panel panel-default">
