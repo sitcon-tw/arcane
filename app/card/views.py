@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
 from django.shortcuts import render
 from django.core.urlresolvers import reverse
+from django.db import transaction
 
 
 def CardNotFound(request):
@@ -54,20 +55,28 @@ def edit(request, id=None):
                         action = 4
                     else:
                         action = 3
-                card.name = form.cleaned_data["name"]
-                card.value = form.cleaned_data["value"]
-                card.long_desc = form.cleaned_data["long_desc"]
-                card.active = form.cleaned_data["active"]
-                card.save()
-                record = History(action=action, user=request.user, card=card)
-                record.save()
+                with transaction.atomic():
+                    card.name = form.cleaned_data["name"]
+                    card.value = form.cleaned_data["value"]
+                    card.long_desc = form.cleaned_data["long_desc"]
+                    card.active = form.cleaned_data["active"]
+                    card.save()
+                    record = History(action=action, user=request.user, card=card)
+                    record.save()
+            else:
+                return render(
+                    request, "submit.html", {
+                        "success": True,
+                        "title": "編輯失敗",
+                        "next_page": reverse('home'),
+                    })
             return render(
                 request, "submit.html", {
                     "success": True,
                     "title": "成功編輯",
                     "content": "成功編輯卡片 %s" % card.name,
                     "next_page": reverse('view card', args=[card.cid]),
-                    })
+                })
 
 
 def get(request, id=None):
@@ -86,28 +95,28 @@ def get(request, id=None):
         if is_player(request.user):
             if not card.retrieved or card.active:
                 # Add points
-                player = request.user.player
-                player.captured_card.add(card)
-                player.save()
-                card.retrieved = True
-                card.save()
-                record = History(action=10, user=request.user, card=card)
-                record.save()
+                with transaction.atomic():
+                    player = request.user.player
+                    player.captured_card.add(card)
+                    player.save()
+                    card.retrieved = True
+                    card.save()
+                    record = History(action=10, user=request.user, card=card)
+                    record.save()
+                return render(
+                    request, "submit.html", {
+                        "success": True,
+                        "title": "恭喜獲得 %d 點" % card.value,
+                        "content": "從 %s 中得到了 %d 點" % (card.name, card.value),
+                        "next_page": reverse('home')
+                    })
             else:
                 return render(
                     request, "submit.html", {
                         "success": False,
                         "title": "卡片已被捕獲",
                         "content": "這張卡片已經被使用過囉，何不換張卡片呢？",
-                        })
-
-            return render(
-                request, "submit.html", {
-                    "success": True,
-                    "title": "恭喜獲得 %d 點" % card.value,
-                    "content": "從 %s 中得到了 %d 點" % (card.name, card.value),
-                    "next_page": reverse('home')
-                })
+                    })
         else:
             raise PermissionDenied
 
@@ -121,22 +130,30 @@ def gen(request):
         else:
             form = CardForm(request.POST)
             if form.is_valid():
-                card = Card()
-                card.name = form.cleaned_data["name"]
-                card.value = form.cleaned_data["value"]
-                card.long_desc = form.cleaned_data["long_desc"]
-                card.active = form.cleaned_data["active"]
-                card.issuer = request.user
-                card.save()
-                record = History(action=1, user=request.user, card=card)
-                record.save()
-            return render(
-                request, "submit.html", {
-                    "success": True,
-                    "title": "一張卡片就此誕生！",
-                    "content": "生成了一張卡片 %s 含有 %d 點" % (card.name, card.value),
-                    "next_page": reverse('generate card'),
-                })
+                with transaction.atomic():
+                    card = Card()
+                    card.name = form.cleaned_data["name"]
+                    card.value = form.cleaned_data["value"]
+                    card.long_desc = form.cleaned_data["long_desc"]
+                    card.active = form.cleaned_data["active"]
+                    card.issuer = request.user
+                    card.save()
+                    record = History(action=1, user=request.user, card=card)
+                    record.save()
+                return render(
+                    request, "submit.html", {
+                        "success": True,
+                        "title": "一張卡片就此誕生！",
+                        "content": "生成了一張卡片 %s 含有 %d 點" % (card.name, card.value),
+                        "next_page": reverse('generate card'),
+                    })
+            else:
+                return render(
+                    request, "submit.html", {
+                        "success": True,
+                        "title": "失敗",
+                        "next_page": reverse('home'),
+                    })
     else:
         raise PermissionDenied
 
@@ -157,7 +174,7 @@ def feed(request, id=None):
                     "success": False,
                     "title": "卡片已被捕獲",
                     "content": "這張卡片已經被使用過囉，何不換張卡片呢？",
-                    })
+                })
         else:
             if not request.POST:
                 form = FeedForm()
@@ -165,18 +182,19 @@ def feed(request, id=None):
             else:
                 form = FeedForm(request.POST)
                 if form.is_valid():
-                    player = form.cleaned_data["player"]
-                    card.retrieved = True
-                    card.capturer = player
-                    card.save()
-                    record_reciever = History(
-                        action=0xfeed, user=player.user, card=card,
-                        comment="從 %s 收到一張卡片" % request.user.get_full_name())
-                    record_reciever.save()
-                    record_sender = History(
-                        action=0xfeed, user=request.user, card=card,
-                        comment="給了 %s (%s)" % (player.user.get_full_name(), player.user.username))
-                    record_sender.save()
+                    with transaction.atomic():
+                        player = form.cleaned_data["player"]
+                        card.retrieved = True
+                        card.capturer = player
+                        card.save()
+                        record_reciever = History(
+                            action=0xfeed, user=player.user, card=card,
+                            comment="從 %s 收到一張卡片" % request.user.get_full_name())
+                        record_reciever.save()
+                        record_sender = History(
+                            action=0xfeed, user=request.user, card=card,
+                            comment="給了 %s (%s)" % (player.user.get_full_name(), player.user.username))
+                        record_sender.save()
                     return render(
                         request, "submit.html", {
                             "success": True,
