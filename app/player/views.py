@@ -23,6 +23,7 @@ def player(request, id=None):
             sorted_players = list(user.player.team.player.all())
             sorted_players.sort(key=lambda x: x.points_acquired, reverse=True)
             this_records = History.objects.filter(user=user)
+            fun = False
             records = []
             for player_i in user.player.team.player.all():
                 records = records + list(History.objects.filter(user=player_i.user))

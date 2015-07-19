@@ -71,8 +71,7 @@ var counter = 0;
 <p>（你貢獻了：{{ user.player.points_acquired }} 點）</p>
 {% endif %}
 
-{% if fun %}
-{% if records %}
+{% if fun and records %}
 <div class="panel-group"  id="accordion">
     <div class="panel panel-default">
         <div class="panel-heading">
@@ -106,9 +105,7 @@ var counter = 0;
 </div>
 </div>
 </div>
-{% endif %}
-{% else %}
-{% if this_records %}
+{% elif this_records and not fun %}
 <div class="panel-group"  id="accordion">
     <div class="panel panel-default">
         <div class="panel-heading">
@@ -127,7 +124,7 @@ var counter = 0;
         <th id="tablestyle" >詳細資料</th>
         <th id="tablestyle">註解</th>
     </tr>
-    {% for record in this_records|dictsort:"date" reversed %}
+    {% for record in records|dictsort:"date" reversed %}
     <tr>
         <td id="tablestyle">{{ record.date | date:'m/d H:i' }}</td>
         <td id="tablestyle">{{ record.action_explain }}</td>
@@ -140,6 +137,5 @@ var counter = 0;
 </div>
 </div>
 </div>
-{% endif %}
 {% endif %}
 {% endblock %}
