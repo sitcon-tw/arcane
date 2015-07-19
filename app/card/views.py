@@ -82,15 +82,24 @@ def get(request, id=None):
             card = Card.objects.get(cid=id)
         except ObjectDoesNotExist:
             return CardNotFound(request)
+
         if is_player(request.user):
-            # Add points
-            player = request.user.player
-            player.captured_card.add(card)
-            player.save()
-            card.retrieved = True
-            card.save()
-            record = History(action=10, user=request.user, card=card)
-            record.save()
+            if not card.retrieved or card.active:
+                # Add points
+                player = request.user.player
+                player.captured_card.add(card)
+                player.save()
+                card.retrieved = True
+                card.save()
+                record = History(action=10, user=request.user, card=card)
+                record.save()
+            else:
+                return render(
+                    request, "submit.html", {
+                        "success": False,
+                        "title": "卡片已被捕獲",
+                        "content": "這張卡片已經被使用過囉，何不換張卡片呢？",
+                        })
 
             return render(
                 request, "submit.html", {
