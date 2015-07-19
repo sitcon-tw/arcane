@@ -4,7 +4,10 @@
 {% block content %}
 <h1>{{ user.player.team.name }} <span style="font-size:25px">{{ user.get_full_name }}</span></h1>
 <p style="font-size:32px">{{ user.player.team.points }} <span style="font-size:20px">點</span></p>
-<p style="font-size:20px">（來自這個玩家： {{ user.player.points_acquired }}）</p>
+
+{% for players in user.player.team.player.all %}
+<p> <b>{{ players.user.get_full_name }}</b>: {{ players.points_acquired }} 點</p>
+{% endfor %}
 
 {% if records %}
 <table>
