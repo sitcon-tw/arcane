@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="{% static 'css/global.css' %}" />
  </head>
   <body>
+  {% block body %}
 
     <div id="header">
         <div class="container">
@@ -27,6 +28,7 @@
         <div class="col-lg-10">
         <div id="divblock">{% block content %}</div></div>
         <div class="col-lg-1"><div>
+      {% endblock %}
     </div>
     <div>
     {% endblock %}
