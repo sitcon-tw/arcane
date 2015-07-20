@@ -63,7 +63,7 @@
 <br style="font-size:22px">
 </div>
 
-{% if request.user.is_staff and not card.retrieved %}
+{% if permission == 3 %}
     <input type="button" onclick="location.href='{% url "edit card" card.cid %}'" value="編輯" />
     <input type="button" onclick="location.href='{% url "feed card" card.cid %}'" value="餵給" />
 {% endif %}

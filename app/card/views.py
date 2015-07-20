@@ -7,6 +7,8 @@ from django.shortcuts import render, redirect
 from django.core.urlresolvers import reverse
 from django.db import transaction
 
+from app.models import user_permission
+
 
 def CardNotFound(request):
     return render(
@@ -18,7 +20,7 @@ def CardNotFound(request):
 
 @login_required
 def card(request, id=None):
-    if not request.user.is_staff:
+    if user_permission(request.user) < 2:
         raise PermissionDenied
     else:
         try:
@@ -27,12 +29,13 @@ def card(request, id=None):
             return CardNotFound(request)
         retriever = card.capturer
         host = request.META['HTTP_HOST']
+        permission = user_permission(request.user)
         return render(request, "card/card.html", locals())
 
 
 @login_required
 def edit(request, id=None):
-    if not request.user.is_staff or Group.objects.get(name='worker') in request.user.groups.all():
+    if user_permission(request.user) < 3:
         raise PermissionDenied
     else:
         try:
@@ -64,30 +67,33 @@ def edit(request, id=None):
                     card.save()
                     record = History(action=action, user=request.user, card=card)
                     record.save()
+                return render(
+                    request, "submit.html", {
+                        "success": True,
+                        "title": "成功編輯",
+                        "content": "成功編輯卡片 %s" % card.name,
+                        "next_page": reverse('view card', args=[card.cid]),
+                    })
             else:
+                # invalid value in form
                 return render(
                     request, "submit.html", {
                         "success": True,
                         "title": "編輯失敗",
                         "next_page": reverse('home'),
                     })
-            return render(
-                request, "submit.html", {
-                    "success": True,
-                    "title": "成功編輯",
-                    "content": "成功編輯卡片 %s" % card.name,
-                    "next_page": reverse('view card', args=[card.cid]),
-                })
 
 
 def get(request, id=None):
-    if request.user.is_authenticated():
+    if user_permission(request.user) == 0:
+        # Anonymous User
         return render(
             request, "submit.html", {
                 "success": False,
                 "content": "你可能需要先掃描一下識別證上的 QR_Code 來登入系統",
                 "title": "未登入！"}, status=404)
-    elif is_player(request.user):
+    elif user_permission(request.user) == 1:
+        # player   
         try:
             card = Card.objects.get(cid=id)
         except ObjectDoesNotExist:
@@ -113,7 +119,8 @@ def get(request, id=None):
                     "title": "卡片已被捕獲",
                     "content": "這張卡片已經被使用過囉，何不換張卡片呢？",
                 })
-    elif request.user.is_staff:
+    elif user_permission(request.user) > 1:
+        # worker and teamleader
         return redirect('view card', card.cid)
     else:
         raise PermissionDenied
@@ -121,7 +128,8 @@ def get(request, id=None):
 
 @login_required
 def gen(request):
-    if request.user.is_staff:
+    if user_permission(request.user) == 3:
+        # only teamleader can use
         if not request.POST:
             form = CardForm()
             return render(request, "card/generate.html", locals())
