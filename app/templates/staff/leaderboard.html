@@ -5,50 +5,50 @@
 
 {% block html %}
 <html style="height: 100%;">
-  <body style="height: 100%;overflow: hidden;">
-    <h1 style="padding-left: 50px">SITCON 夏令營 第一梯次 點數報表</h1>
-    <table width="100%" class="table" style="height: 100%;">
-      <tr>
-        <td width="55%">
-          <div id="graph"></div>
-        </td>
-        <td width="45%">
-            <ul style="font-size: 20px;">
-              <li>總發卡量：{{ lencards }}</li>
-              <ul>
-                <li>被捕獲量：{{ lencardsgot }}</li>
-              </ul>
-              <li>點數值總計：{{ totalpoints }}</li>
-              <ul>
-                <li>被捕獲總計：{{ totalpointsgot }}</li>
-              </ul>
-              <li>目前領先： {{ sorted_teams.0.name }}</li>
-              <ul>
-                <li>第二：{{ sorted_teams.1.name }}</li>
-                <li>第三：{{ sorted_teams.2.name }}</li>
-              </ul>
-            </ul>
-            <table class="table">
-              <tr>
-                <th id="tablestyle">時間</th>
-                <th id="tablestyle">人員</th>
-                <th id="tablestyle">行動類別</th>
-                <th id="tablestyle" >詳細資料</th>
-                <th id="tablestyle" >取得點數</th>
-              </tr>
-              {% for entry in history_entries %}
-              <tr>
-                <td id="tablestyle">{{ entry.date | date:'Y-m-d H:i:s' }}</td>
-                <td id="tablestyle">{{ entry.user.last_name }} ({{ entry.user.username }})</td>
-                <td id="tablestyle">{{ entry.action_explain }}</td>
-                <td id="tablestyle"><a href="{% url 'view card' entry.card.cid %}">{{ entry.card.name }}</a></td>
-                <td id="tablestyle">{{ entry.card.value }} 點</td>
-              </tr>
-              {% endfor %}
-            </table>
-        </td>
-      </tr>
-    </table>
-  </body>
+    <body style="height: 100%;overflow: hidden;">
+        <h1 style="padding-left: 50px">SITCON 夏令營 第一梯次 點數報表</h1>
+        <table width="100%" class="table" style="height: 100%;">
+            <tr>
+                <td width="55%">
+                    <div id="graph"></div>
+                </td>
+                <td width="45%">
+                    <ul style="font-size: 20px;">
+                        <li>總發卡量：{{ lencards }}</li>
+                        <ul>
+                            <li>被捕獲量：{{ lencardsgot }}</li>
+                        </ul>
+                        <li>點數值總計：{{ totalpoints }}</li>
+                        <ul>
+                            <li>被捕獲總計：{{ totalpointsgot }}</li>
+                        </ul>
+                        <li>目前領先： {{ sorted_teams.0.name }}</li>
+                        <ul>
+                            <li>第二：{{ sorted_teams.1.name }}</li>
+                            <li>第三：{{ sorted_teams.2.name }}</li>
+                        </ul>
+                    </ul>
+                    <table class="table">
+                        <tr>
+                            <th id="tablestyle">時間</th>
+                            <th id="tablestyle">人員</th>
+                            <th id="tablestyle">行動類別</th>
+                            <th id="tablestyle" >詳細資料</th>
+                            <th id="tablestyle" >取得點數</th>
+                        </tr>
+                        {% for entry in history_entries %}
+                        <tr>
+                            <td id="tablestyle">{{ entry.date | date:'Y-m-d H:i:s' }}</td>
+                            <td id="tablestyle">{{ entry.user.last_name }} ({{ entry.user.username }})</td>
+                            <td id="tablestyle">{{ entry.action_explain }}</td>
+                            <td id="tablestyle"><a href="{% url 'view card' entry.card.cid %}">{{ entry.card.name }}</a></td>
+                            <td id="tablestyle">{{ entry.card.value }} 點</td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </body>
 </html>
 {% endblock %}
