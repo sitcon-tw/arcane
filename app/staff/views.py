@@ -50,7 +50,7 @@ def lite(request, tt=None):
             present = request.user.first_name
             if not present:
                 present = '祝福'
-            card.name = "來自 %s 的 %s" % (request.user.last_name, present)
+            card.name = "來自 %s 的%s" % (request.user.last_name, present)
             card.value = denomination[tt]
             card.active = True
             card.retrieved = False
