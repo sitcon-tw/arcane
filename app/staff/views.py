@@ -47,7 +47,7 @@ def lite(request, tt=None):
             card = Card()
             denomination = [64, 128, 256, -64]
             present = request.user.first_name
-            if not present:
+            if present == "":
                 present = '祝福'
             card.name = "來自 %s 的%s" % (request.user.last_name, present)
             card.value = denomination[tt]
@@ -75,7 +75,7 @@ def gift(request):
             card = Card()
             # hard code
             present = request.user.first_name
-            if not present:
+            if present == "":
                 present = '祝福'
             with transaction.atomic():
                 card.name = "來自 %s 的%s" % (request.user.last_name, present)
