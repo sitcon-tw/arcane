@@ -1,5 +1,6 @@
 from app.card.forms import CardForm, FeedForm
-from app.models import Card, History, is_player, Group
+from app.models import Card, History, is_player
+from django.contrib.auth.models import Group
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
 from django.shortcuts import render, redirect
