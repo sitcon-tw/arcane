@@ -107,3 +107,14 @@ def is_player(user):
             return True
     except:
         return False
+
+
+def user_permission(user):
+    if not user.is_authenticated():
+        return 0
+    if is_player(user):
+        return 1
+    if user.groups.filter(name="worker").exists():
+        return 2
+    else:
+        return 3
