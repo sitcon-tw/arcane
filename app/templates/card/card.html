@@ -10,7 +10,7 @@
   <div class="panel-heading">
 <br>
 {% if not card.retrieved %}
-<img  style="display:block; margin:auto;" src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=http%3A%2F%2F{{ host }}{% url 'get' card.cid %}" />
+<img  style="display:block; margin:auto;" src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https%3A%2F%2F{{ host }}{% url 'get' card.cid %}" />
 {% endif %}
 </br>
   </div>
