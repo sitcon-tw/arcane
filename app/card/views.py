@@ -144,11 +144,11 @@ def gen(request):
                         "next_page": reverse('view card', args=[card.cid]),
                     })
             else:
-                return render(
-                    request, "submit.html", {
-                        "success": True,
-                        "title": "失敗",
-                        "next_page": reverse('home'),
+                return render(request, "submit.html", {
+                    "success": False,
+                    "title": "產生卡片失敗",
+                    "content": "要不要去戳戳系統管理員呢？"
+                    "(如果是POST奇怪的資料，可能會收到彈力繩喔ˊ_>ˋ)"
                     })
     else:
         raise PermissionDenied
