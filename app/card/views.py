@@ -1,8 +1,8 @@
 from app.card.forms import CardForm, FeedForm
-from app.models import Card, History, is_player
+from app.models import Card, History, is_player, Group
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.core.urlresolvers import reverse
 from django.db import transaction
 
@@ -80,39 +80,38 @@ def edit(request, id=None):
 
 
 def get(request, id=None):
-    if not is_player(request.user):
+    if request.user.is_authenticated():
         return render(
             request, "submit.html", {
                 "success": False,
                 "content": "你可能需要先掃描一下識別證上的 QR_Code 來登入系統",
                 "title": "未登入！"}, status=404)
-    else:
+    elif is_player(request.user):
         try:
             card = Card.objects.get(cid=id)
         except ObjectDoesNotExist:
             return CardNotFound(request)
 
-        if is_player(request.user):
-            if not card.retrieved and card.active:
-                # Add points
-                with transaction.atomic():
-                    player = request.user.player
-                    player.captured_card.add(card)
-                    player.save()
-                    card.retrieved = True
-                    card.save()
-                    record = History(action=10, user=request.user, card=card)
-                    record.save()
-                abscardvalue = abs(card.value)
-                return render(
-                    request, "card/get.html", locals())
-            else:
-                return render(
-                    request, "submit.html", {
-                        "success": False,
-                        "title": "卡片已被捕獲",
-                        "content": "這張卡片已經被使用過囉，何不換張卡片呢？",
-                    })
+        if not card.retrieved and card.active:
+            # Add points
+            with transaction.atomic():
+                player = request.user.player
+                player.captured_card.add(card)
+                player.save()
+                card.retrieved = True
+                card.save()
+                record = History(action=10, user=request.user, card=card)
+                record.save()
+            abscardvalue = abs(card.value)
+            return render(
+                request, "card/get.html", locals())
+        else:
+            return render(
+                request, "submit.html", {
+                    "success": False,
+                    "title": "卡片已被捕獲",
+                    "content": "這張卡片已經被使用過囉，何不換張卡片呢？",
+                })
     elif request.user.is_staff:
         return redirect('view card', card.cid)
     else:
@@ -151,7 +150,7 @@ def gen(request):
                     "title": "產生卡片失敗",
                     "content": "要不要去戳戳系統管理員呢？"
                     "(如果是POST奇怪的資料，可能會收到彈力繩喔ˊ_>ˋ)"
-                    })
+                })
     else:
         raise PermissionDenied
 
