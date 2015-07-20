@@ -79,7 +79,7 @@ def gift(request):
             if not present:
                 present = '祝福'
             with transaction.atomic():
-                card.name = "來自 %s 的 %s" % (request.user.last_name, present)
+                card.name = "來自 %s 的%s" % (request.user.last_name, present)
                 card.value = form.cleaned_data['point']
                 card.comment = form.cleaned_data['message']
                 card.active = True
