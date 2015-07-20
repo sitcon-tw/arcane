@@ -23,6 +23,8 @@ def dashboard(request):
 
 @login_required
 def lite(request, tt=None):
+    if user_permission(request.user) < 2:
+        raise PermissionDenied
     if tt is not None:
         try:
             tt = int(tt)
