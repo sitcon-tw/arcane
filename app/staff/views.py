@@ -2,18 +2,17 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.core.exceptions import PermissionDenied
 from django.db import transaction
-from django.contrib.auth.models import Group
 
 from app import models as data
 from app.staff.forms import FastSendForm
-from app.models import Card, History
+from app.models import Card, History, user_permission
 
 
 @login_required
 def dashboard(request):
-    if not request.user.is_staff:
+    if user_permission(request.user) < 2:
         raise PermissionDenied
-    if Group.objects.get(name='worker') in request.user.groups.all():
+    if user_permission(request.user) < 3:
         return redirect('lite')
     players = data.Player.objects.all()
     cards = data.Card.objects.all()
@@ -24,8 +23,6 @@ def dashboard(request):
 
 @login_required
 def lite(request, tt=None):
-    if not request.user.is_staff:
-        raise PermissionDenied
     if tt is not None:
         try:
             tt = int(tt)
@@ -65,7 +62,7 @@ def lite(request, tt=None):
 
 @login_required
 def gift(request):
-    if not request.user.is_staff:
+    if user_permission(request.user) < 3:
         raise PermissionDenied
     if request.method == 'GET':
         return render(request, 'staff/gift.html', {"form": FastSendForm()})
