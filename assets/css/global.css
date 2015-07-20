@@ -1,11 +1,14 @@
 body {
   background-color: #f0f2f2;
   height=100%;
-} 
+  box-shadow: 0 1px 5px #2d2d2d;
+}
 .navbar-default {
   background-color: #121313;
   border-color: #333333;
-  box-shadow: 0 1px 5px #2d2d2d;
+}
+.navbar-text {
+  margin-bottom: 0px;
 }
 .navbar-default .navbar-brand {
   color: #ffffff;
