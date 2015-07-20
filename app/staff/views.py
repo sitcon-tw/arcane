@@ -17,7 +17,7 @@ def dashboard(request):
     players = data.Player.objects.all()
     cards = data.Card.objects.all()
     teams = data.Team.objects.all()
-    history_entries = data.History.objects.all()
+    history_entries = data.History.objects.all().order_by('-date')[:30]
     return render(request, 'staff/dashboard.html', locals())
 
 @login_required
@@ -67,7 +67,7 @@ def lite(request, tt=None):
             card.retrieved = False
             card.issuer = request.user
             card.save()
-            record = History(action=10, user=request.user, card=card)
+            record = History(action=1, user=request.user, card=card)
             record.save()
         return redirect('view card', card.cid)
     else:
