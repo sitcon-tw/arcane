@@ -1,7 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.core.exceptions import PermissionDenied
-from django.db import transaction
+from django.db import transaction, models
 
 from app import models as data
 from app.staff.forms import FastSendForm
@@ -19,6 +19,24 @@ def dashboard(request):
     teams = data.Team.objects.all()
     history_entries = data.History.objects.all().order_by('-date')[:30]
     return render(request, 'staff/dashboard.html', locals())
+
+@login_required
+def leaderboard(request):
+    if user_permission(request.user) < 2:
+        raise PermissionDenied
+    if user_permission(request.user) < 3:
+        return redirect('lite')
+    players = data.Player.objects.all()
+    cards = data.Card.objects.all()
+    lencards = len(cards)
+    lencardsgot = len([x for x in cards if x.retrieved])
+    totalpoints = data.Card.objects.filter(active=True).aggregate(models.Sum('value'))["value__sum"]
+    totalpointsgot = data.Card.objects.filter(retrieved=True).aggregate(models.Sum('value'))["value__sum"]
+    teams = data.Team.objects.all().exclude(tid="zsh")
+    sorted_teams = list(teams)
+    sorted_teams.sort(key=lambda x: x.points, reverse=True)
+    history_entries = data.History.objects.all().order_by('-date')[:30]
+    return render(request, 'staff/leaderboard.html', locals())
 
 
 @login_required
