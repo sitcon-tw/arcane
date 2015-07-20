@@ -7,9 +7,6 @@ body {
   background-color: #121313;
   border-color: #333333;
 }
-.navbar-text {
-  margin-bottom: 0px;
-}
 .navbar-default .navbar-brand {
   color: #ffffff;
 }
@@ -24,6 +21,9 @@ body {
 }
 .navbar-default .navbar-nav > li > a:hover, .navbar-default .navbar-nav > li > a:focus {
   color: #ae332e;
+}
+.navbar-text {
+  margin-bottom: 0px;
 }
 .navbar-default .navbar-nav > .active > a, .navbar-default .navbar-nav > .active > a:hover, .navbar-default .navbar-nav > .active > a:focus {
   color: #ae332e;
