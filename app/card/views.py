@@ -113,7 +113,7 @@ def get(request, id=None):
                         "title": "卡片已被捕獲",
                         "content": "這張卡片已經被使用過囉，何不換張卡片呢？",
                     })
-    elif request.user.is_staff:
+    elif: request.user.is_staff:
         return redirect('view card', card.cid)
     else:
         raise PermissionDenied
