@@ -35,7 +35,7 @@ def lite(request, tt=None):
                     "title": "發送卡片失敗",
                     "content": "我幫你綁好繩子了，"
                     "你要自己跳還是我推你跳呢？（本繩載重20g）"})
-        if tt not in [0, 1, 2]:
+        if tt not in [0, 1, 2, 3]:
             return render(
                 request, "submit.html", {
                     "success": False,
@@ -45,7 +45,7 @@ def lite(request, tt=None):
                 })
         with transaction.atomic():
             card = Card()
-            denomination = [64, 128, 256]
+            denomination = [64, 128, 256, -64]
             present = request.user.first_name
             if not present:
                 present = '祝福'
