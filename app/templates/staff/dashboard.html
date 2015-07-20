@@ -76,7 +76,7 @@
 <table class="table">
 {% for entry in history_entries %}
 <tr><td>{{ entry.date | date:'Y-m-d H:i:s' }} &nbsp; {{ entry.user.get_full_name }} ({{ entry.user.username }})&nbsp;&nbsp;{{ entry.action_explain }}:
-  {{ entry.card.name }} {{ entry.comment }}</td><tr>
+    <a href={% url 'view card' entry.card.cid %}>{{ entry.card.name }}</a> {{ entry.comment }}</td><tr>
 {% endfor %}
 </table>
 </div>

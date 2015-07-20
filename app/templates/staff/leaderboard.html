@@ -41,7 +41,7 @@
                 <td id="tablestyle">{{ entry.date | date:'Y-m-d H:i:s' }}</td>
                 <td id="tablestyle">{{ entry.user.last_name }} ({{ entry.user.username }})</td>
                 <td id="tablestyle">{{ entry.action_explain }}</td>
-                <td id="tablestyle">{{ entry.card.name }}</td>
+                <td id="tablestyle"><a href="{% url 'view card' entry.card.cid %}">{{ entry.card.name }}</a></td>
                 <td id="tablestyle">{{ entry.card.value }} 點</td>
               </tr>
               {% endfor %}
