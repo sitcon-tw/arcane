@@ -42,7 +42,7 @@ var counter = 0;
   </div>
 </td>
 </tr>
-{#{% for each_player in sorted_players %}
+{% comment %}{% for each_player in sorted_players %}
 {% if not each_player.points_acquired == 0 %}
 <tr>
     <td>
@@ -59,7 +59,8 @@ var counter = 0;
     </td>
 </tr>
 {% endif %}
-{% endfor %}#}
+{% endfor %}
+{% endcomment %}
 
 </table>
 </div>
