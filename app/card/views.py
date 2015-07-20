@@ -31,7 +31,7 @@ def card(request, id=None):
 
 @login_required
 def edit(request, id=None):
-    if not request.user.is_staff:
+    if not request.user.is_staff or Group.objects.get(name='worker') in request.user.groups.all():
         raise PermissionDenied
     else:
         try:
@@ -113,6 +113,8 @@ def get(request, id=None):
                         "title": "卡片已被捕獲",
                         "content": "這張卡片已經被使用過囉，何不換張卡片呢？",
                     })
+        elif request.user.is_staff:
+            return redirect('view card', card.cid)
         else:
             raise PermissionDenied
 
