@@ -20,6 +20,18 @@ def dashboard(request):
     history_entries = data.History.objects.all()
     return render(request, 'staff/dashboard.html', locals())
 
+@login_required
+def leaderboard(request):
+    if user_permission(request.user) < 2:
+        raise PermissionDenied
+    if user_permission(request.user) < 3:
+        return redirect('lite')
+    players = data.Player.objects.all()
+    cards = data.Card.objects.all()
+    teams = data.Team.objects.all()
+    history_entries = data.History.objects.all()
+    return render(request, 'staff/leaderboard.html', locals())
+
 
 @login_required
 def lite(request, tt=None):
