@@ -28,7 +28,7 @@
                             <li>第三：{{ sorted_teams.2.name }} {{ sorted_teams.2.points }}</li>
                         </ul>
                     </ul>
-                    <table class="table">
+                    <table class="table" style="font-size: 12px;">
                         <tr>
                             <th id="tablestyle">時間</th>
                             <th id="tablestyle">人員</th>
@@ -38,7 +38,7 @@
                         </tr>
                         {% for entry in history_entries %}
                         <tr>
-                            <td id="tablestyle">{{ entry.date | date:'Y-m-d H:i:s' }}</td>
+                            <td id="tablestyle">{{ entry.date | date:'m/d H:i' }}</td>
                             <td id="tablestyle">{{ entry.user.last_name }} ({{ entry.user.username }})</td>
                             <td id="tablestyle">{{ entry.action_explain }}</td>
                             <td id="tablestyle"><a href="{% url 'view card' entry.card.cid %}">{{ entry.card.name }}</a></td>
