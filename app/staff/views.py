@@ -41,7 +41,7 @@ def leaderboard(request):
 
 @login_required
 def lite(request, tt=None):
-    denomination = [64, 128, 256, -64]
+    denomination = [32, 64, 128, 256, -64]
     if user_permission(request.user) < 2:
         raise PermissionDenied
     if tt is not None:
