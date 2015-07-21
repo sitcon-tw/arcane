@@ -5,28 +5,11 @@
 <div class="well">
 <p style="font-size:22px"> 請選擇你要產生的卡片 </p>
 <br>
+{% for denom in denomination %}
 <div class="btn-group btn-group-justified" role="group">
-    <a class="btn btn-primary" role="button" href='{% url 'lite' 0 %}' style="font-size:26px">64卡</a>
+    <a class="btn btn-primary" role="button" href='{% url 'lite' forloop.counter0 %}' style="font-size:26px">{{ denom }}卡</a>
 </div>
 <br>
-<br>
-<div class="btn-group btn-group-justified" role="group">
-    <a class="btn btn-primary" role="button" href='{% url 'lite' 1 %}' style="font-size:26px">128卡</a>
-</div>
-<br>
-<br>
-<div class="btn-group btn-group-justified" role="group">
-    <a class="btn btn-primary" role="button" href='{% url 'lite' 2 %}' style="font-size:26px">256卡</a>
-</div>
-<br>
-<br>
-<div class="btn-group btn-group-justified" role="group">
-    <a class="btn btn-primary" role="button" href='{% url 'lite' 3 %}' style="font-size:26px">-64卡</a>
-</div>
-<br>
-<div class="btn-group btn-group-justified" role="group">
-    <a class="btn btn-primary" role="button" href='{% url 'lite' 3 %}' style="font-size:26px">-64卡</a>
-</div>
-<br>
+{% endfor %}
 </div>
 {% endblock %}

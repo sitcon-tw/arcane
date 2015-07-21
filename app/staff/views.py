@@ -41,6 +41,7 @@ def leaderboard(request):
 
 @login_required
 def lite(request, tt=None):
+    denomination = [64, 128, 256, -64]
     if user_permission(request.user) < 2:
         raise PermissionDenied
     if tt is not None:
@@ -53,7 +54,7 @@ def lite(request, tt=None):
                     "title": "發送卡片失敗",
                     "content": "我幫你綁好繩子了，"
                     "你要自己跳還是我推你跳呢？（本繩載重20g）"})
-        if tt not in [0, 1, 2, 3]:
+        if tt not in range(0, len(denomination)):
             return render(
                 request, "submit.html", {
                     "success": False,
@@ -63,7 +64,6 @@ def lite(request, tt=None):
                 })
         with transaction.atomic():
             card = Card()
-            denomination = [64, 128, 256, -64]
             present = request.user.first_name
             if present == "":
                 present = '祝福'
@@ -77,7 +77,7 @@ def lite(request, tt=None):
             record.save()
         return redirect('view card', card.cid)
     else:
-        return render(request, 'staff/lite.html')
+        return render(request, 'staff/lite.html',locals())
 
 
 @login_required
