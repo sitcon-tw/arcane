@@ -63,7 +63,7 @@ $(document).ready(function(){
     $('.point').each(function(){
         var t_id = $(this).find("td").eq(0).text();
         var t_point = $(this).find("td").eq(1).text();
-        dd.push(t_point);
+        dd.push({"name": t_id, "point":t_point});
     });
     //新增一個SVG，並設定長、寬
     var svg = d3.select("#graph").append("svg")
@@ -100,10 +100,12 @@ $(document).ready(function(){
            .data(pie(dd))
            .enter()
            .append("g")
+           .attr('class', 'slice');
            //實際畫圓的方式是以SVG圖形路徑（Path）來繪製
-           .append("path")
+           g1.append("path")
            //路徑的部份要設定在d屬性中，所以套入arc1函數，
            //d3.js會依據資料配合arc1函數產出Path所需的路徑
+               .attr("d", arc1)
                .style("fill", function(d, i) {
                  return color(i);
           });
