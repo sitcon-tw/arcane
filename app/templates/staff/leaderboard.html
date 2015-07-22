@@ -57,6 +57,7 @@
             </tr>
         </table>
         <script type="text/javascript">
+$(document).ready(function(){
     //資料
     var dd = [];
     $('.point').each(function(){
@@ -106,6 +107,7 @@
                .style("fill", function(d) { 
                  return color(d.data); 
           });                                     
+});
   </script>
     </body>
 </html>
