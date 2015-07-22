@@ -49,7 +49,7 @@
                     </table>
                     <table class="table">
                         <tr><td>team id</td><td>points</td></tr>
-                        {% for team in teams %}
+                        {% for team in sorted_teams %}
                         <tr class="point"><td>{{ team.name }}</td><td> {{team.points}}</td></tr>
                         {% endfor %}
                     </table>
