@@ -10,10 +10,10 @@
         <h1 style="padding-left: 50px">SITCON 夏令營 第一梯次 點數報表</h1>
         <table width="100%" class="table" style="height: 100%;">
             <tr>
-                <td width="45%">
+                <td width="55%">
                     <div id="graph"></div>
                 </td>
-                <td width="55%">
+                <td width="45%">
                     <ul style="font-size: 20px;">
                         <li>總發卡量：{{ lencards }}</li>
                         <ul>
@@ -67,8 +67,8 @@ $(document).ready(function(){
     });
     //新增一個SVG，並設定長、寬
     var svg = d3.select("#graph").append("svg")
-            .attr("width", 800)
-            .attr("height", 800)
+            .attr("width", 600)
+            .attr("height", 600)
             .append("g")
             //因為原點座標0,0在左上角，所以必須位移到指定的位置上，
         //否則會因為在畫圓時，圓心座標在0,0而導致部份圖形被裁切。
