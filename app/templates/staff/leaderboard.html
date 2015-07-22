@@ -50,7 +50,7 @@
                     <table class="table">
                         <tr><td>team id</td><td>points</td></tr>
                         {% for team in teams %}
-                        <tr class="point"><td>{{ team.tid }}</td><td> {{team.points}}</td></tr>
+                        <tr class="point"><td>{{ team.name }}</td><td> {{team.points}}</td></tr>
                         {% endfor %}
                     </table>
                 </td>
@@ -94,8 +94,8 @@ $(document).ready(function(){
        //建立一個layout pie物件，無排序
        var pie = d3.layout.pie()
            .value(function(d){ return d.point; })
-            .sort(null) ;       
-                             
+            .sort(null) ;
+
     var g1 = svg.selectAll("g")
            .data(pie(dd))
            .enter()
@@ -106,16 +106,17 @@ $(document).ready(function(){
            //路徑的部份要設定在d屬性中，所以套入arc1函數，
            //d3.js會依據資料配合arc1函數產出Path所需的路徑
                .attr("d", arc1)
-               .style("fill", function(d, i) { 
-                 return color(i); 
-          });                                     
+               .style("fill", function(d, i) {
+                 return color(i);
+          });
      g1.append("text")                                     //add a label to each slice
                 .attr("transform", function(d) {                    //set the label's origin to the center of the arc
                 //we have to make sure to set these before calling arc.centroid
                 return "translate(" + arc1.centroid(d) + ")";        //this gives us a pair of coordinates like [50, 50]
             })
             .attr("text-anchor", "middle")                          //center the text on it's origin
-            .text(function(d) { return d.data.name; }); 
+            .attr("font-size", "20px")                          //center the text on it's origin
+            .text(function(d) { return d.data.name + d.data.point; });
 });
   </script>
     </body>
