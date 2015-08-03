@@ -121,7 +121,12 @@ def get(request, id=None):
                 })
     elif user_permission(request.user) > 1:
         # worker and teamleader
-        return redirect('view card', card.cid)
+        return render(
+            request, "submit.html", {
+                "success": False,
+                "title": "工人是不能領卡的",
+                "content": "工人是不能領卡的，下去領五百。",
+            })
     else:
         raise PermissionDenied
 
