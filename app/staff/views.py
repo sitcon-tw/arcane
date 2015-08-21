@@ -5,44 +5,50 @@ from django.db import transaction, models
 
 from app import models as data
 from app.staff.forms import FastSendForm
-from app.models import Card, History, user_permission
+from app.models import Card, History
 
 
 @login_required
 def dashboard(request):
-    if user_permission(request.user) < 2:
-        raise PermissionDenied
-    if user_permission(request.user) < 3:
+    if request.user.has_perm('app.master'):
+        # only game master can view this page
+        players = data.Player.objects.all()
+        cards = data.Card.objects.all()
+        teams = data.Team.objects.all()
+        history_entries = data.History.objects.all().order_by('-date')[:30]
+        return render(request, 'staff/dashboard.html', locals())
+
+    elif request.user.has_perm('app.worker'):
+        # redirect low level staff to lite page
         return redirect('lite')
-    players = data.Player.objects.all()
-    cards = data.Card.objects.all()
-    teams = data.Team.objects.all()
-    history_entries = data.History.objects.all().order_by('-date')[:30]
-    return render(request, 'staff/dashboard.html', locals())
+
+    else:
+        raise PermissionDenied
+
 
 @login_required
 def leaderboard(request):
-    if user_permission(request.user) < 2:
+    if request.user.has_perm('app.master'):
+        # game master can visit
+        players = data.Player.objects.all()
+        cards = data.Card.objects.all()
+        lencards = len(cards)
+        lencardsgot = len([x for x in cards if x.retrieved])
+        totalpoints = data.Card.objects.filter(active=True).aggregate(models.Sum('value'))["value__sum"]
+        totalpointsgot = data.Card.objects.filter(retrieved=True).aggregate(models.Sum('value'))["value__sum"]
+        teams = data.Team.objects.all().exclude(tid="zsh")
+        sorted_teams = list(teams)
+        sorted_teams.sort(key=lambda x: x.points, reverse=True)
+        history_entries = data.History.objects.all().order_by('-date')[:30]
+        return render(request, 'staff/leaderboard.html', locals())
+    else:
         raise PermissionDenied
-    if user_permission(request.user) < 3:
-        return redirect('lite')
-    players = data.Player.objects.all()
-    cards = data.Card.objects.all()
-    lencards = len(cards)
-    lencardsgot = len([x for x in cards if x.retrieved])
-    totalpoints = data.Card.objects.filter(active=True).aggregate(models.Sum('value'))["value__sum"]
-    totalpointsgot = data.Card.objects.filter(retrieved=True).aggregate(models.Sum('value'))["value__sum"]
-    teams = data.Team.objects.all().exclude(tid="zsh")
-    sorted_teams = list(teams)
-    sorted_teams.sort(key=lambda x: x.points, reverse=True)
-    history_entries = data.History.objects.all().order_by('-date')[:30]
-    return render(request, 'staff/leaderboard.html', locals())
 
 
 @login_required
 def lite(request, tt=None):
     denomination = [32, 64, 128, 256, -128, -32, -64]
-    if user_permission(request.user) < 2:
+    if not request.user.has_perm('app.gen_card'):
         raise PermissionDenied
     if tt is not None:
         try:
@@ -77,12 +83,12 @@ def lite(request, tt=None):
             record.save()
         return redirect('view card', card.cid)
     else:
-        return render(request, 'staff/lite.html',locals())
+        return render(request, 'staff/lite.html', locals())
 
 
 @login_required
 def gift(request):
-    if user_permission(request.user) < 3:
+    if not request.user.has_perm('app.master'):
         raise PermissionDenied
     if request.method == 'GET':
         return render(request, 'staff/gift.html', {"form": FastSendForm()})
