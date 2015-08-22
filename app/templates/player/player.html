@@ -4,7 +4,7 @@
 
 <script type='text/javascript'>
 $(document).ready(function(){
- var back = ["#65D122", "#428BCA", "#c941be", "#615560", "#8be874", "f6faa3"];
+ var back = ["#65D122", "#428BCA", "#C941BE", "#615560", "#8BE874", "#F6FAA3"];
  var counter = 0;
    $(".pb").each(function(){
     $(this).css({
@@ -49,27 +49,27 @@ var counter = 0;
         </div>
         <div id="panel1" class="panel-collapse collapse">
             <div class="panel-body">
- <table class="table">
-    <tr>
-        <th id="tablestyle">時間</th>
-        <th id="tablestyle">隊員</th>
-        <th id="tablestyle">行動類別</th>
-        <th id="tablestyle" >詳細資料</th>
-        <th id="tablestyle">註解</th>
-    </tr>
-    {% for record in records|dictsort:"date" reversed %}
-    <tr>
-        <td id="tablestyle">{{ record.date | date:'m/d H:i' }}</td>
-        <td id="tablestyle">{{ record.user.last_name }}</td>
-        <td id="tablestyle">{{ record.action_explain }}</td>
-        <td id="tablestyle">從卡片 {{ record.card.name }} 中得到了 {{ record.card.value }} 分</td>
-        <td id="tablestyle">{{ record.comment }}</td>
-    </tr>
-    {% endfor %}
-</table>
-</div>
-</div>
-</div>
+                <div class="table responsive">
+                    <div class="table-tr">
+                        <div class="table-th table-td">時間</div>
+                        <div class="table-th table-td">隊員</div>
+                        <div class="table-th table-td">行動類別</div>
+                        <div class="table-th table-full">詳細資料</div>
+                        <div class="table-th table-full">註解</div>
+                    </div>
+                    {% for record in records|dictsort:"date" reversed %}
+                    <div class="table-tr">
+                        <div class="table-td">{{ record.date | date:'m/d H:i' }}</div>
+                        <div class="table-td">{{ record.user.last_name }}</div>
+                        <div class="table-td">{{ record.action_explain }}</div>
+                        <div class="table-full">從卡片 {{ record.card.name }} 中得到了 {{ record.card.value }} 分</div>
+                        <div class="table-full">{{ record.comment }}</div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 {% endif %}
 {% endblock %}

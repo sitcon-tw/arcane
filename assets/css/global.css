@@ -53,6 +53,12 @@ body {
   color: #ae332e;
 }
 
+.table.responsive { display: table; }
+.table.responsive .table-tr { display: table-row; }
+.table.responsive .table-th { font-weight: 500; }
+.table.responsive .table-td,
+.table.responsive .table-full { display: table-cell; }
+
 @media (max-width: 767px) {
   .navbar-default .navbar-nav .open .dropdown-menu > li > a {
     color: #ffffff;
@@ -64,6 +70,20 @@ body {
     color: #ae332e;
     background-color: #333333;
   }
+
+  .table.responsive .table-tr {
+    display: block;
+    border-bottom: 1px solid #eee;
+    padding-top: 16px;
+    padding-bottom: 8px;
+    margin-bottom: 8px;
+  }
+  .table.responsive .table-th { font-weight: 500; }
+  .table.responsive .table-td {
+    display: table-cell;
+    padding-right: .6em;
+  }
+  .table.responsive .table-full { display: block; }
 }
 #tablestyle{
 padding:2px 5px 2px 5px;
