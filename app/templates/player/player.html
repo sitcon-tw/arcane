@@ -25,48 +25,19 @@ var counter = 0;
   });
 });
 </script>
-<div class="well">
 <h1>{{ user.player.team.name }} <span style="font-size:25px" class="badge">{{ user.player.team.points }} 點</span></h1>
 <p>（你貢獻了：{{ user.player.points_acquired }} 點）</p>
-{% if fun %}
 <div>
-<table class="table" style="font-size:16px" id="percentclac" >
-<tr>
- <td>
   <div class="progress" id="stack">
     {% for each_player in sorted_players %}
       <div class="progress-bar progress-bar-success pb" style="width: {{ each_player.weight|floatformat:0}}%; " >
-             <span style="color:#000;">{{ each_player.user.last_name }} </span>
+             <span>{{ each_player.user.last_name }} </span>
       </div>
     {% endfor %}
   </div>
-</td>
-</tr>
-{% comment %}{% for each_player in sorted_players %}
-{% if not each_player.points_acquired == 0 %}
-<tr>
-    <td>
-        <span>{{ each_player.user.last_name }}</span>
-    </td>
-</tr>
-<tr>
-    <td>
-        <div class="progress">
-          <div class="progress-bar progress-bar-danger pb1" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" style="width : calc({{ each_player.points_acquired }} / {{ user.player.team.points }}  * 100%);">
-             <span style="color:#000;">{{ each_player.points_acquired }} / {{ user.player.team.points }}</span>
-          </div>
-        </div>
-    </td>
-</tr>
-{% endif %}
-{% endfor %}
-{% endcomment %}
-
-</table>
 </div>
-{% endif %}
 
-{% if fun and records %}
+{% if records %}
 <div class="panel-group"  id="accordion">
     <div class="panel panel-default">
         <div class="panel-heading">
@@ -90,38 +61,6 @@ var counter = 0;
     <tr>
         <td id="tablestyle">{{ record.date | date:'m/d H:i' }}</td>
         <td id="tablestyle">{{ record.user.last_name }}</td>
-        <td id="tablestyle">{{ record.action_explain }}</td>
-        <td id="tablestyle">從卡片 {{ record.card.name }} 中得到了 {{ record.card.value }} 分</td>
-        <td id="tablestyle">{{ record.comment }}</td>
-    </tr>
-    {% endfor %}
-</table>
-</div>
-</div>
-</div>
-</div>
-{% elif this_records and not fun %}
-<div class="panel-group"  id="accordion">
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <div class="panel-title">
-                <a href="#panel1" class="panel-toggle" data-toggle="collapse" data-parent="#accordion">
-                    展開或是收起詳細紀錄
-                </a>
-            </div>
-        </div>
-        <div id="panel1" class="panel-collapse collapse">
-            <div class="panel-body">
- <table class="table">
-    <tr>
-        <th id="tablestyle">時間</th>
-        <th id="tablestyle">行動類別</th>
-        <th id="tablestyle" >詳細資料</th>
-        <th id="tablestyle">註解</th>
-    </tr>
-    {% for record in this_records|dictsort:"date" reversed %}
-    <tr>
-        <td id="tablestyle">{{ record.date | date:'m/d H:i' }}</td>
         <td id="tablestyle">{{ record.action_explain }}</td>
         <td id="tablestyle">從卡片 {{ record.card.name }} 中得到了 {{ record.card.value }} 分</td>
         <td id="tablestyle">{{ record.comment }}</td>
