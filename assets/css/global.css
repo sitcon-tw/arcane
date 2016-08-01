@@ -65,9 +65,9 @@ body {
     background-color: #333333;
   }
 }
-#tablestyle{
+/* #tablestyle{
 padding:2px 5px 2px 5px;
-}
+} */
 #divblock {
   /* font-size */: 20px;
   margin-top: 50px;
@@ -141,4 +141,37 @@ padding:2px 5px 2px 5px;
 }
 #table-cards td {
   line-height: 31px;
+}
+
+/* leaderboard */
+
+#leaderboard {
+  background: #1C1C1C;
+  color: white;
+  padding: 15px;
+}
+
+#leaderboard .page-header {
+  margin-top: 0;
+}
+
+#leaderboard h1 {
+  color: #A8D8B9;
+}
+
+#leaderboard .row {
+  margin-bottom: 2em;
+}
+
+#leaderboard a {
+  color: #A8D8B9;
+}
+
+#leaderboard strong,
+#leaderboard th {
+  color: #86C166;
+}
+
+#graph {
+  border: 3px dashed white;
 }
