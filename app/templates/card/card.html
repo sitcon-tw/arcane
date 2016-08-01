@@ -2,43 +2,42 @@
 {% block title %}點數卡{% endblock %}
 
 {% block content %}
-<h1>點數卡
-    <div class="button-group-oper">
+    <h1>點數卡
+    <small>
+    {{ card.name }}
+    <div class="btn-group pull-right">
         {% if allow_edit %}
-        <a class="btn btn-info" href="{% url 'edit card' card.cid %}">編輯</a><br>
+            <a class="btn btn-info" href="{% url 'edit card' card.cid %}">編輯</a>
         {% endif %}
         {% if allow_feed %}
-        <a class="btn btn-success" href="{% url 'feed card' card.cid %}">餵食</a><br>
+            <a class="btn btn-success" href="{% url 'feed card' card.cid %}">餵食</a>
         {% endif %}
     </div>
-    <small>{{ card.name }}</small>
-</h1>
-<hr>
-<div class="container-fluid ">
-    <div class="row">
-        <img id="qrcode" src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=https%3A%2F%2F{{ host }}{% url 'get' card.cid %}" />
-        <div class="col-md-12 text-center"><small>{{ card.cid }}</small></div>
-    </div>
-    <div class="row row-info">
-        <div class="caption">卡片價值</div>
-        <div class="content">{{ card.value }}</div>
-    </div>
-    <div class="row row-info">
-        <div class="caption">卡片狀態</div>
-        <div class="content">
-            {% if card.active and not card.retrieved %}
-            已啟用，尚未被領取
-            {% elif not card.active and not card.retrieved %}
-            尚未啟用
-            {% else %}
-            已被 {{ card.capturer}} 領取
-            {% endif %}
+    </small>
+    </h1>
+    <hr>
+    <div class="container-fluid ">
+        <img id="qrcode" src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&amp;data=https%3A%2F%2F{{ host }}{% url 'get' card.cid %}" />
+        <p class="text-center">{{ card.cid }}</p>
+        <div class="row row-info">
+            <div class="caption">卡片價值</div>
+            <div class="content">{{ card.value }}</div>
+        </div>
+        <div class="row row-info">
+            <div class="caption">卡片狀態</div>
+            <div class="content">
+                {% if card.active and not card.retrieved %}
+                    已啟用，尚未被領取
+                    {% elif not card.active and not card.retrieved %}
+                    尚未啟用
+                {% else %}
+                    已被 {{ card.capturer}} 領取
+                {% endif %}
+            </div>
+        </div>
+        <div class="row">
+            <a class="btn btn-primary btn-leave" role="button" href="{% url 'home' %}">轉身離去</a>
         </div>
     </div>
-    <div class="row">
-        <a class="btn btn-primary btn-leave" role="button" href="{% url 'home' %}">轉身離去</a>
-    </div>
-</div>
-
+    
 {% endblock %}
-
