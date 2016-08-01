@@ -26,16 +26,15 @@
         </div>
 
 
-        <div class="container">
-            <div class="col-lg-1"></div>
-            <div class="col-lg-10">
-                <div id="divblock">{% block content %}{% endblock %}</div></div>
-            <div class="col-lg-1"><div>
-                </div>
-                <div>
-                    {# insert any js here #}
-                </div>
-                {% endblock %}
+        <!-- <div class="container"> -->
+            <div id="divblock">
+                {% block content %}{% endblock %}
+            </div>
+            <div>
+                {# insert any js here #}
+            </div>
+        <!-- </div> -->
+        {% endblock %}
     </body>
     {% endblock %}
 </html>
