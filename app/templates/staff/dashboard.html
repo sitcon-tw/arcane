@@ -1,80 +1,83 @@
 {% extends 'base.html' %}
 {% block title %} 儀表板（？） {% endblock %}
 {% block content %}
-  <div class="container">
-    <div class="page-header">
-      <h1>儀表板（？）</h1>
-    </div>
-    <div class="btn-group">
-      <!-- <input type="button" onclick="location.href='{% url "generate card" %}'" value="產生卡片" class="btn btn-primary"/>
-      <input type="button" onclick="location.href='{% url "fast send" %}'" value="快速發送" class="btn btn-primary"/>
-      <input type="button" onclick="location.href='{% url "lite" %}'" value="簡易介面" class="btn btn-info"/> -->
-      <a href='{% url "generate card" %}' class="btn btn-primary">產生卡片</a>
-      <a href='{% url "fast send" %}' class="btn btn-success">快速發送</a>
-      <a href='{% url "lite" %}' class="btn btn-warning">簡易介面</a>
-    </div>
-    <h3>卡片</h3>
-    <button class="btn btn-default" type="button" data-toggle="collapse" data-target="#collapse-cards" aria-expanded="false" aria-controls="collapse-cards">展開或是收起卡片</button>
-    <div class="collapse" id="collapse-cards">
-      <div class="table-responsive">
-        <table class="table" id="table-cards">
-          <thead>
-            <tr>
-              <th>名稱</th>
-              <th>內容</th>
-              <th>功能</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for card in cards %}
-              <tr>
-                <td>
-                  <a href="{% url 'view card' card.cid %}">{{ card.name }} ({{ card.cid }}), {{ card.value }} 點</a>
-                  {% if card.long_desc %}
-                    <p>{{ card.long_desc }}</p>
-                  {% endif %}
-                </td>
-                <td>
-                  {% if card.active and not card.retrieved %}
-                    已啟用，尚未被領取
-                    {% elif not card.active and not card.retrieved %}
-                    尚未啟用
-                  {% else %}
-                    已被 {{ card.capturer }} 領取
-                  {% endif %}
-                </td>
-                <td>
-                  {% if not card.retrieved %}
-                    <input type="button" onclick="location.href='{% url "edit card" card.cid %}'" value="編輯" class="btn btn-sm btn-info" />
-                    <input type="button" onclick="location.href='{% url "feed card" card.cid %}'" value="餵給" class="btn btn-sm btn-primary" />
-                  {% endif %}
-                </td>
-              </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
-    </div>
-    <h3>隊伍</h3>
-    <ul>
-      <table class="table">
+  <div class="page-header">
+    <h1>儀表板（？）</h1>
+  </div>
+  <div class="btn-group">
+    <!-- <input type="button" onclick="location.href='{% url "generate card" %}'" value="產生卡片" class="btn btn-primary"/>
+    <input type="button" onclick="location.href='{% url "fast send" %}'" value="快速發送" class="btn btn-primary"/>
+    <input type="button" onclick="location.href='{% url "lite" %}'" value="簡易介面" class="btn btn-info"/> -->
+    <a href='{% url "generate card" %}' class="btn btn-primary">產生卡片</a>
+    <a href='{% url "fast send" %}' class="btn btn-success">快速發送</a>
+    <a href='{% url "lite" %}' class="btn btn-warning">簡易介面</a>
+  </div>
+  <!--  -->
+  <h3>卡片</h3>
+  <button class="btn btn-default" type="button" data-toggle="collapse" data-target="#collapse-cards" aria-expanded="false" aria-controls="collapse-cards">展開或是收起卡片</button>
+  <div class="collapse" id="collapse-cards">
+    <div class="table-responsive">
+      <table class="table" id="table-cards">
+        <thead>
+          <tr>
+            <th>功能</th>
+            <th>名稱</th>
+            <th>狀態</th>
+            <th>內容</th>
+          </tr>
+        </thead>
         <tbody>
-          {% for team in teams %}
+          {% for card in cards %}
             <tr>
               <td>
-                <li>{{ team.name }} ({{ team.tid }}), {{ team.points }} 點</li>
-                <ul>
-                  {% for player in team.player.all %}
-                    <li>{{ player.user.get_full_name }} ({{ player.user.username }}), {{ player.points_acquired }} 點</li>
-                  {% endfor %}
-                </ul>
+                {% if not card.retrieved %}
+                  <input type="button" onclick="location.href='{% url "edit card" card.cid %}'" value="編輯" class="btn btn-sm btn-info" />
+                  <input type="button" onclick="location.href='{% url "feed card" card.cid %}'" value="餵給" class="btn btn-sm btn-primary" />
+                {% endif %}
+              </td>
+              <td>
+                <a href="{% url 'view card' card.cid %}">{{ card.name }} ({{ card.cid }}), {{ card.value }} 點</a>
+              </td>
+              <td>
+                {% if card.active and not card.retrieved %}
+                  已啟用，尚未被領取
+                  {% elif not card.active and not card.retrieved %}
+                  尚未啟用
+                {% else %}已被 {{ card.capturer }}
+                  領取
+                {% endif %}
+              </td>
+              <td>
+                {% if card.long_desc %}
+                  <p>{{ card.long_desc }}</p>
+                {% endif %}
               </td>
             </tr>
           {% endfor %}
         </tbody>
       </table>
-    </ul>
-    <h3>操作記錄</h3>
-    <pre>{% for entry in history_entries %}{{ entry.date | date:'Y-m-d H:i:s' }} {{ entry.user.get_full_name }} ({{ entry.user.username }}){{ entry.action_explain }}: <a href={% url 'view card' entry.card.cid %}>{{ entry.card.name }}</a> {{ entry.comment }}{% endfor %}</pre>
+    </div>
   </div>
+  <!--  -->
+  <h3>隊伍</h3>
+  <ul>
+    <table class="table">
+      <tbody>
+        {% for team in teams %}
+          <tr>
+            <td>
+              <li>{{ team.name }} ({{ team.tid }}), {{ team.points }} 點</li>
+              <ul>
+                {% for player in team.player.all %}
+                  <li>{{ player.user.get_full_name }} ({{ player.user.username }}), {{ player.points_acquired }} 點</li>
+                {% endfor %}
+              </ul>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </ul>
+  <h3>操作記錄</h3>
+  <pre>{% for entry in history_entries %}{{ entry.date | date:'Y-m-d H:i:s' }} {{ entry.user.get_full_name }} ({{ entry.user.username }}){{ entry.action_explain }}: <a href={% url 'view card' entry.card.cid %}>{{ entry.card.name }}</a> {{ entry.comment }}<br>{% endfor %}</pre>
 {% endblock %}

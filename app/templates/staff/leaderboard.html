@@ -6,78 +6,80 @@
     <body>
         <meta http-equiv="refresh" content="15">
         <div id="leaderboard">
-            <div class="page-header">
-                <h1>SITCON 夏令營 第一梯次 點數報表</h1>
-            </div>
-            <!--  -->
-            <h3>Realtime</h3>
-            <div class="row">
-                <div class="col-sm-6">
-                    <ul>
-                        <li><strong>　總發卡量</strong>：{{ lencards }}</li>
-                        <li><strong>　被捕獲量</strong>：{{ lencardsgot }}</li>
-                        <li><strong>點數值總計</strong>：{{ totalpoints }}</li>
-                        <li><strong>被捕獲總計</strong>：{{ totalpointsgot }}</li>
-                    </ul>
+            <div class="container">
+                <div class="page-header">
+                    <h1>SITCON 夏令營 第一梯次 點數報表</h1>
                 </div>
-                <div class="col-sm-6">
-                    <strong>Rank</strong>
-                    <ol>
-                        <li>{{ sorted_teams.0.name }} {{ sorted_teams.0.points }}</li>
-                        <li>{{ sorted_teams.1.name }} {{ sorted_teams.1.points }}</li>
-                        <li>{{ sorted_teams.5.name }} {{ sorted_teams.5.points }}</li>
-                    </ol>
+                <!--  -->
+                <h3>Realtime</h3>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <ul>
+                            <li><strong>　總發卡量</strong>：{{ lencards }}</li>
+                            <li><strong>　被捕獲量</strong>：{{ lencardsgot }}</li>
+                            <li><strong>點數值總計</strong>：{{ totalpoints }}</li>
+                            <li><strong>被捕獲總計</strong>：{{ totalpointsgot }}</li>
+                        </ul>
+                    </div>
+                    <div class="col-sm-6">
+                        <strong>Rank</strong>
+                        <ol>
+                            <li>{{ sorted_teams.0.name }} {{ sorted_teams.0.points }}</li>
+                            <li>{{ sorted_teams.1.name }} {{ sorted_teams.1.points }}</li>
+                            <li>{{ sorted_teams.5.name }} {{ sorted_teams.5.points }}</li>
+                        </ol>
+                    </div>
                 </div>
-            </div>
-            <!--  -->
-            <h3>Graph</h3>
-            <div class="row">
-                <div class="col-sm-8">
-                    <div id="graph"></div>
-                </div>
-                <div class="col-sm-4">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Team ID</th>
-                                <th>Points</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for team in sorted_teams %}
-                                <tr class="point">
-                                    <td>{{ team.name }}</td>
-                                    <td>{{team.points}}</td>
+                <!--  -->
+                <h3>Graph</h3>
+                <div class="row">
+                    <div class="col-sm-8">
+                        <div id="graph"></div>
+                    </div>
+                    <div class="col-sm-4">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Team ID</th>
+                                    <th>Points</th>
                                 </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                {% for team in sorted_teams %}
+                                    <tr class="point">
+                                        <td>{{ team.name }}</td>
+                                        <td>{{team.points}}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-            </div>
-            <!--  -->
-            <h3>Log</h3>
-            <table class="table table-condensed">
-                <thead>
-                    <tr>
-                        <th>時間</th>
-                        <th>人員</th>
-                        <th>行動類別</th>
-                        <th>詳細資料</th>
-                        <th>取得點數</th>
-                    </tr>
-                </thead>
-                {% for entry in history_entries %}
-                    <tbody>
+                <!--  -->
+                <h3>Log</h3>
+                <table class="table table-condensed">
+                    <thead>
                         <tr>
-                            <td id="tablestyle">{{ entry.date | date:'m/d H:i' }}</td>
-                            <td id="tablestyle">{{ entry.user.last_name }} ({{ entry.user.username }})</td>
-                            <td id="tablestyle">{{ entry.action_explain }}</td>
-                            <td id="tablestyle"><a href="{% url 'view card' entry.card.cid %}">{{ entry.card.name }}</a></td>
-                            <td id="tablestyle">{{ entry.card.value }} 點</td>
+                            <th>時間</th>
+                            <th>人員</th>
+                            <th>行動類別</th>
+                            <th>詳細資料</th>
+                            <th>取得點數</th>
                         </tr>
-                    </tbody>
-                {% endfor %}
-            </table>
+                    </thead>
+                    {% for entry in history_entries %}
+                        <tbody>
+                            <tr>
+                                <td id="tablestyle">{{ entry.date | date:'m/d H:i' }}</td>
+                                <td id="tablestyle">{{ entry.user.last_name }} ({{ entry.user.username }})</td>
+                                <td id="tablestyle">{{ entry.action_explain }}</td>
+                                <td id="tablestyle"><a href="{% url 'view card' entry.card.cid %}">{{ entry.card.name }}</a></td>
+                                <td id="tablestyle">{{ entry.card.value }} 點</td>
+                            </tr>
+                        </tbody>
+                    {% endfor %}
+                </table>
+            </div>
         </div>
         <script src="/static/js/leaderboard.js"></script>
     </body>

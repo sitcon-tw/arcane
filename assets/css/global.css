@@ -10,9 +10,12 @@ body {
 .navbar-default .navbar-brand {
   color: #ffffff;
 }
-.navbar-default .navbar-brand:hover, .navbar-default .navbar-brand:focus {
-  color: #ae332e;
+.navbar-default .navbar-brand:hover {
+  color:  white;
 }
+/* .navbar-default .navbar-brand:hover, .navbar-default .navbar-brand:focus {
+  color: #ae332e;
+} */
 .navbar-default .navbar-text {
   color: #ffffff;
 }
@@ -69,9 +72,8 @@ body {
 padding:2px 5px 2px 5px;
 } */
 #divblock {
-  /* font-size */: 20px;
   margin-top: 50px;
-  float: center;}
+}
 #progresspercent {
   width : calc({{ each_player.points_acquired }} / {{ user.player.team.points }}  * 100%) ;
 
@@ -84,6 +86,7 @@ padding:2px 5px 2px 5px;
     margin-right: auto;
     width: 100%;
     max-width: 300px;
+    min-height: 300px;
 }
 .row-info {
     display: flex;
@@ -122,7 +125,9 @@ padding:2px 5px 2px 5px;
     width: 80px;
 }
 
-/*  */
+/*==============================
+=            hotfix            =
+==============================*/
 
 * {
   -webkit-overflow-scrolling: touch;
@@ -130,6 +135,12 @@ padding:2px 5px 2px 5px;
 
 .container h3 {
   margin-top: 2em;
+}
+
+@media (min-width: 768px) {
+  .navbar-header {
+    float:  none;
+  }
 }
 
 #logout-button {
@@ -149,6 +160,10 @@ padding:2px 5px 2px 5px;
   background: #1C1C1C;
   color: white;
   padding: 15px;
+}
+
+#leadboard .container {
+  max-width: 1400px;
 }
 
 #leaderboard .page-header {
