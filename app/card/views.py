@@ -1,13 +1,10 @@
 from app.card.forms import CardForm, FeedForm
-from app.models import Card, History, is_player
-from django.contrib.auth.models import Group
+from app.models import Card, History
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
 from django.shortcuts import render, redirect
 from django.core.urlresolvers import reverse
 from django.db import transaction
-
-from app.models import user_permission
 
 
 def CardNotFound(request):
@@ -20,28 +17,33 @@ def CardNotFound(request):
 
 @login_required
 def card(request, id=None):
-    if user_permission(request.user) < 2:
-        raise PermissionDenied
-    else:
+    if request.user.is_authenticated():
         try:
             card = Card.objects.get(cid=id)
         except ObjectDoesNotExist:
             return CardNotFound(request)
-        retriever = card.capturer
-        host = request.META['HTTP_HOST']
-        permission = user_permission(request.user)
-        return render(request, "card/card.html", locals())
+        if not card.retrieved and not request.user.has_perm('app.read_card'):
+            return render(
+                request, "submit.html", {
+                    "success": False,
+                    "content": "尚未被領取的卡片，我才不會告訴你內容呢",
+                    "title": "未開封的卡片"}, status=404)
+        else:
+            retriever = card.capturer
+            host = request.META['HTTP_HOST']
+            allow_edit = request.user.has_perm('app.change_card')
+            allow_feed = request.user.has_perm('app.feed_card')
+            return render(request, "card/card.html", locals())
 
 
 @login_required
 def edit(request, id=None):
-    if user_permission(request.user) < 3:
-        raise PermissionDenied
-    else:
+    if request.user.has_perm('app.change_card'):
         try:
             card = Card.objects.get(cid=id)
         except ObjectDoesNotExist:
             return CardNotFound(request)
+
         if not request.POST:
             form = CardForm(
                 {"name": card.name,
@@ -50,6 +52,7 @@ def edit(request, id=None):
                  "active": card.active,
                  "retrieved": card.retrieved})
             return render(request, "card/edit.html", locals())
+
         else:
             form = CardForm(request.POST)
             if form.is_valid():
@@ -80,20 +83,22 @@ def edit(request, id=None):
                     request, "submit.html", {
                         "success": True,
                         "title": "編輯失敗",
-                        "next_page": reverse('home'),
+                        "next_page": reverse('edit card', id),
                     })
+    else:
+        raise PermissionDenied
 
 
 def get(request, id=None):
-    if user_permission(request.user) == 0:
+    if not request.user.is_authenticated():
         # Anonymous User
         return render(
             request, "submit.html", {
                 "success": False,
                 "content": "你可能需要先掃描一下識別證上的 QR_Code 來登入系統",
-                "title": "未登入！"}, status=404)
-    elif user_permission(request.user) == 1:
-        # player   
+                "title": "未登入！"}, status=403)
+    elif request.user.has_perm('app.get_card'):
+        # player
         try:
             card = Card.objects.get(cid=id)
         except ObjectDoesNotExist:
@@ -112,6 +117,13 @@ def get(request, id=None):
             abscardvalue = abs(card.value)
             return render(
                 request, "card/get.html", locals())
+        elif not card.active:
+            return render(
+                request, "submit.html", {
+                    "success": False,
+                    "title": "卡片已被失效",
+                    "content": "這張卡片已經被使註銷囉，何不換張卡片呢？",
+                })
         else:
             return render(
                 request, "submit.html", {
@@ -119,7 +131,9 @@ def get(request, id=None):
                     "title": "卡片已被捕獲",
                     "content": "這張卡片已經被使用過囉，何不換張卡片呢？",
                 })
-    elif user_permission(request.user) > 1:
+
+    else:
+        # user without permission of capturing a card
         # worker and teamleader
         return render(
             request, "submit.html", {
@@ -127,13 +141,11 @@ def get(request, id=None):
                 "title": "工人是不能領卡的",
                 "content": "工人是不能領卡的，下去領五百。",
             })
-    else:
-        raise PermissionDenied
 
 
 @login_required
 def gen(request):
-    if user_permission(request.user) == 3:
+    if request.user.has_perm('app.add_card'):
         # only teamleader can use
         if not request.POST:
             form = CardForm()
@@ -171,15 +183,13 @@ def gen(request):
 
 @login_required
 def feed(request, id=None):
-    if not request.user.is_staff:
-        raise PermissionDenied
-    else:
+    if request.user.has_perm('app.feed_card'):
         try:
             card = Card.objects.get(cid=id)
         except ObjectDoesNotExist:
             return CardNotFound(request)
 
-        if not card.active or card.retrieved:
+        if card.retrieved:
             return render(
                 request, "submit.html", {
                     "success": False,
@@ -187,7 +197,7 @@ def feed(request, id=None):
                     "content": "這張卡片已經被使用過囉，何不換張卡片呢？",
                 })
         else:
-            if not request.POST:
+            if request.method == 'GET':
                 form = FeedForm()
                 return render(request, "card/feed.html", locals())
             else:
@@ -196,6 +206,7 @@ def feed(request, id=None):
                     with transaction.atomic():
                         player = form.cleaned_data["player"]
                         card.retrieved = True
+                        card.active = True
                         card.capturer = player
                         card.save()
                         record_reciever = History(
@@ -219,3 +230,5 @@ def feed(request, id=None):
                             "title": "發送卡片失敗",
                             "content": "要不要去戳戳系統管理員呢？"
                         })
+    else:
+        raise PermissionDenied

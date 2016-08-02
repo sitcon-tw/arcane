@@ -1,6 +1,6 @@
 body {
-  background-color: #f0f2f2;
-  height=100%;
+  /* background-color: #f0f2f2; */
+  /* height=100%; */
   box-shadow: 0 1px 5px #2d2d2d;
 }
 .navbar-default {
@@ -10,9 +10,12 @@ body {
 .navbar-default .navbar-brand {
   color: #ffffff;
 }
-.navbar-default .navbar-brand:hover, .navbar-default .navbar-brand:focus {
-  color: #ae332e;
+.navbar-default .navbar-brand:hover {
+  color:  white;
 }
+/* .navbar-default .navbar-brand:hover, .navbar-default .navbar-brand:focus {
+  color: #ae332e;
+} */
 .navbar-default .navbar-text {
   color: #ffffff;
 }
@@ -53,6 +56,12 @@ body {
   color: #ae332e;
 }
 
+.table.responsive { display: table; }
+.table.responsive .table-tr { display: table-row; }
+.table.responsive .table-th { font-weight: 500; }
+.table.responsive .table-td,
+.table.responsive .table-full { display: table-cell; }
+
 @media (max-width: 767px) {
   .navbar-default .navbar-nav .open .dropdown-menu > li > a {
     color: #ffffff;
@@ -64,16 +73,142 @@ body {
     color: #ae332e;
     background-color: #333333;
   }
+
+  .table.responsive .table-tr {
+    display: block;
+    border-bottom: 1px solid #eee;
+    padding-top: 16px;
+    padding-bottom: 8px;
+    margin-bottom: 8px;
+  }
+  .table.responsive .table-th { font-weight: 500; }
+  .table.responsive .table-td {
+    display: table-cell;
+    padding-right: .6em;
+  }
+  .table.responsive .table-full { display: block; }
 }
-#tablestyle{
+/* #tablestyle{
 padding:2px 5px 2px 5px;
-}
+} */
 #divblock {
-  font-size: 20px;
-  margin-top: 90px;
-  float: center;}
+  margin-top: 50px;
+}
 #progresspercent {
   width : calc({{ each_player.points_acquired }} / {{ user.player.team.points }}  * 100%) ;
 
 
+}
+
+
+
+#qrcode {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+    max-width: 300px;
+    min-height: 300px;
+}
+.row-info {
+    display: flex;
+}
+
+.row-info .caption {
+    font-weight: 500;
+    text-align: right;
+    padding-right: .8em;
+    flex: 0 2 5em;
+}
+
+.row-info .content {
+    flex: 1 3 100px;
+}
+
+@media screen and (max-width: 479px) {
+    h1 small {
+        display: block;
+        margin-top: 12px;
+    }
+}
+
+.btn-leave {
+    margin-top: 1.5em;
+    margin-bottom: 2em;
+    width: 100%;
+}
+
+.button-group-oper {
+    float: right;
+    text-align: right;
+}
+.button-group-oper .btn {
+    padding: 8px 24px;
+    width: 80px;
+}
+
+/*==============================
+=            hotfix            =
+==============================*/
+
+* {
+  -webkit-overflow-scrolling: touch;
+}
+
+.container h3 {
+  margin-top: 2em;
+}
+
+@media (min-width: 768px) {
+  .navbar-header {
+    float:  none;
+  }
+}
+
+#logout-button {
+  float: right;
+  padding: 15px;
+  color: #ae332e;
+  background-color: #333333;
+
+}
+#table-cards td {
+  line-height: 31px;
+}
+
+/* leaderboard */
+
+#leaderboard {
+  background: #1C1C1C;
+  color: white;
+  padding: 15px;
+}
+
+#leadboard .container {
+  max-width: 1400px;
+}
+
+#leaderboard .page-header {
+  margin-top: 0;
+}
+
+#leaderboard h1 {
+  color: #A8D8B9;
+}
+
+#leaderboard .row {
+  margin-bottom: 2em;
+}
+
+#leaderboard a {
+  color: #A8D8B9;
+}
+
+#leaderboard strong,
+#leaderboard th {
+  color: #86C166;
+}
+
+#graph {
+  border: 3px dashed white;
 }

@@ -4,10 +4,7 @@ from django.utils.crypto import get_random_string
 
 
 class Team(models.Model):
-    tid = models.CharField(max_length=32,
-                           primary_key=True,
-                           verbose_name="Team ID",
-                           help_text="Alphanumeric name for the team.")
+    tid = models.AutoField(primary_key=True)
     name = models.CharField(max_length=100,
                             verbose_name="Name",
                             help_text="Name of the team.")
@@ -78,6 +75,19 @@ class Card(models.Model):
             return (str(self.name) + " (" + str(self.cid) + "), "
                     "inactive, " + str(self.value) + " points.")
 
+    class Meta:
+        permissions = (
+            ('read_card', 'can view card detail message'),
+            ('get_card', 'can capture card'),
+            ('toggle_card', 'can active/inactive card'),
+            ('gen_card', 'can generate card within limit'),
+            ('feed_card', 'can directly send card to someone'),
+            ('view_cardlist', 'can list all card'),
+
+            ('master', 'game master'),
+            ('worker', 'normal staff'),
+        )
+
 
 class History(models.Model):
     ACTION_CODE = {
@@ -100,21 +110,7 @@ class History(models.Model):
     def action_explain(self):
         return History.ACTION_CODE[self.action]
 
-
-def is_player(user):
-    try:
-        if user.player:
-            return True
-    except:
-        return False
-
-
-def user_permission(user):
-    if not user.is_authenticated():
-        return 0
-    if is_player(user):
-        return 1
-    if user.groups.filter(name="worker").exists():
-        return 2
-    else:
-        return 3
+    class Meta:
+        permissions = (
+            ('view_history', 'can view history'),
+        )
