@@ -1,15 +1,15 @@
 {% extends 'base.html' %}
 {% block title %}
-	餵食
+餵食
 {% endblock %}
 {% block content %}
-	<h1>餵食點數卡</h1>
-	{% if error %}
-		<p>{{ error }}</p>
-	{% endif %}
-	<form action="{% url 'fast send' %}" method="post">
-		{% csrf_token %}
-		{{ form.as_p }}
-		<input type="submit" value="餵" class="btn btn-primary">
-	</form>
+<h1>餵食點數卡</h1>
+{% if error %}
+<p>{{ error }}</p>
+{% endif %}
+<form action="{% url 'fast send' %}" method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <input type="submit" value="餵"/>
+</form>
 {% endblock %}

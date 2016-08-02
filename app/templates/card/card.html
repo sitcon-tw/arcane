@@ -2,42 +2,75 @@
 {% block title %}點數卡{% endblock %}
 
 {% block content %}
-    <h1>點數卡
-    <small>
-    {{ card.name }}
-    <div class="btn-group pull-right">
-        {% if allow_edit %}
-            <a class="btn btn-info" href="{% url 'edit card' card.cid %}">編輯</a>
-        {% endif %}
-        {% if allow_feed %}
-            <a class="btn btn-success" href="{% url 'feed card' card.cid %}">餵食</a>
-        {% endif %}
+<div class="well">
+
+  {% if permission >= 2 %}
+  {% if not card.retrieved %}
+  <a type="button" href='{% url "edit card" card.cid %}' class="btn btn-primary">編輯</a>
+  {% endif %}
+  <a type="button" href='{% url "feed card" card.cid %}' class="btn btn-primary">餵食</a>
+  {% endif %}
+
+  <h1>點數卡 <span style="font-size:18px" > 卡片名稱：{{ card.name }}</span></h1>
+  <div class="panel panel-default">
+    {% if not card.retrieved %}
+    <div class="panel-heading">
+      <br>
+      <img  style="display:block; margin:auto;" src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https%3A%2F%2F{{ host }}{% url 'get' card.cid %}" />
+      </br>
     </div>
-    </small>
-    </h1>
-    <hr>
-    <div class="container-fluid ">
-        <img id="qrcode" src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&amp;data=https%3A%2F%2F{{ host }}{% url 'get' card.cid %}" />
-        <p class="text-center">{{ card.cid }}</p>
-        <div class="row row-info">
-            <div class="caption">卡片價值</div>
-            <div class="content">{{ card.value }}</div>
-        </div>
-        <div class="row row-info">
-            <div class="caption">卡片狀態</div>
-            <div class="content">
-                {% if card.active and not card.retrieved %}
-                    已啟用，尚未被領取
-                    {% elif not card.active and not card.retrieved %}
-                    尚未啟用
-                {% else %}
-                    已被 {{ card.capturer}} 領取
-                {% endif %}
-            </div>
-        </div>
-        <div class="row">
-            <a class="btn btn-primary btn-leave" role="button" href="{% url 'home' %}">轉身離去</a>
-        </div>
+    {% endif %}
+    <table class="table">
+      <tr>
+        <td>
+          <p style="font-size:22px">  卡片ID： </p>
+        </td>
+        <td>
+          <p style="font-size:22px">{{ card.cid }}</p>
+        </td>
+      </tr>
+      <td>
+        <p style="font-size:22px">  卡片價值： </p>
+      </td>
+      <td>
+        <p style="font-size:22px">{{ card.value }} <span style="font-size:20px">點</span></p>
+      </td>
+      </tr>
+      <tr>
+        <td>
+          <p style="font-size:22px"> 卡片狀態： </p>
+        </td>
+        <td>
+          <p style="font-size:22px">
+          {% if card.active and not card.retrieved %}
+          已啟用，尚未被領取
+          {% elif not card.active and not card.retrieved %}
+          尚未啟用
+          {% else %}
+          已被 {{ card.capturer}} 領取
+          {% endif %}
+          </p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p style="font-size:22px"> 卡片敘述： </p>
+        </td>
+        <td>
+          <p style="font-size:22px">
+          {% autoescape off %}<p style="font-size:22px"> {{ card.long_desc }} </p> {% endautoescape %}
+          </p>
+        </td>
+      </tr>
+    </table>
+    <div class="btn-group btn-group-justified" role="group">
+      <a class="btn btn-primary" role="button" href="{% url 'home' %}" style="font-size:26px">轉身離去</a>
     </div>
-    
+    <br style="font-size:22px">
+  </div>
+
+
+</div>
 {% endblock %}
+
+

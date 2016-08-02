@@ -1,8 +1,9 @@
-from app.models import History
+import operator
+from app.models import Card, History, is_player
 from app.player.forms import FeedForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
 from django.shortcuts import redirect, render
 from django.db import transaction
 
@@ -11,16 +12,18 @@ def player(request, id=None):
     if not request.user.is_authenticated():
         return redirect("login", id)
     else:
-        if request.user.is_staff:
-            return redirect('home')
         if not id == request.user.username:
             # rediect logged-in user to /player/<username>
             return redirect('player data', request.user.username)
+        if not is_player(request.user):
+            # ban non player
+            raise PermissionDenied
         else:
             user = request.user
             sorted_players = list(user.player.team.player.all())
             sorted_players.sort(key=lambda x: x.points_acquired, reverse=True)
             this_records = History.objects.filter(user=user)
+            fun = True
             records = []
             for player_i in user.player.team.player.all():
                 records = records + list(History.objects.filter(user=player_i.user))
@@ -34,15 +37,22 @@ def player(request, id=None):
 
 @login_required
 def feed(request, id=None):
-    if request.user.has_perm('app.feed_card'):
+    if not request.user.is_staff:
+        raise PermissionDenied
+    else:
         try:
             user = User.objects.get(username=id)
         except ObjectDoesNotExist:
             return render(
                 request, "submit.html", {
-                    "content": "你是找誰？",
+                    "content": "你是誰？",
                     "title": "錯誤！"}, status=404)
 
+        if not is_player(user):
+            return render(
+                request, "submit.html", {
+                    "content": "工作人員的世界你是看不到的!",
+                    "title": "錯誤！"}, status=404)
         else:
             if not request.POST:
                 form = FeedForm()
@@ -72,8 +82,3 @@ def feed(request, id=None):
                         })
                 else:
                     return render(request, "player/feed.html", locals())
-    else:
-        return render(
-            request, "submit.html", {
-                "content": "工作人員的世界你是看不到的!",
-                "title": "錯誤！"}, status=403)

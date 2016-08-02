@@ -2,6 +2,7 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
         <meta charset="utf-8"/>
         <title>{% block title %}{% endblock %} ‧ SITCON Camp 點數系統</title>
         <meta name="description" content="SITCON Summer Camp 學生計算機夏令營點數系統。關於學生計算機年會，請前往 http://sitcon.org/，關於學生計算機夏令營，請前往 http://sitcon.camp。" />
@@ -19,15 +20,22 @@
         {% block body %}
 
         <div id="header">
-            {% include "topbar.html" %}
+            <div class="container">
+                {% include "topbar.html" %}
+            </div>
         </div>
 
 
-        <!-- <div class="container"> -->
-            <div class="container" id="divblock">{% block content %}{% endblock %}</div>
-            <div>{# insert any js here #}</div>
-        <!-- </div> -->
-        {% endblock %}
+        <div class="container">
+            <div class="col-lg-1"></div>
+            <div class="col-lg-10">
+                <div id="divblock">{% block content %}{% endblock %}</div></div>
+            <div class="col-lg-1"><div>
+                </div>
+                <div>
+                    {# insert any js here #}
+                </div>
+                {% endblock %}
     </body>
     {% endblock %}
 </html>

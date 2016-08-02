@@ -1,86 +1,124 @@
 {% extends 'base.html' %}
-
-{% block title %}點數報表{% endblock %}
+{% block title %}
+點數報表
+{% endblock %}
 
 {% block html %}
-    <body>
+<html style="height: 100%;">
+    <body style="height: 100%;overflow: hidden;">
         <meta http-equiv="refresh" content="15">
-        <div id="leaderboard">
-            <div class="container">
-                <div class="page-header">
-                    <h1>SITCON 夏令營 第一梯次 點數報表</h1>
-                </div>
-                <!--  -->
-                <h3>Realtime</h3>
-                <div class="row">
-                    <div class="col-sm-6">
+        <h1 style="padding-left: 50px">SITCON 夏令營 第一梯次 點數報表</h1>
+        <table width="100%" class="table" style="height: 100%;">
+            <tr>
+                <td width="55%">
+                    <div id="graph"></div>
+                </td>
+                <td width="45%">
+                    <ul style="font-size: 20px;">
+                        <li>總發卡量：{{ lencards }}</li>
                         <ul>
-                            <li><strong>　總發卡量</strong>：{{ lencards }}</li>
-                            <li><strong>　被捕獲量</strong>：{{ lencardsgot }}</li>
-                            <li><strong>點數值總計</strong>：{{ totalpoints }}</li>
-                            <li><strong>被捕獲總計</strong>：{{ totalpointsgot }}</li>
+                            <li>被捕獲量：{{ lencardsgot }}</li>
                         </ul>
-                    </div>
-                    <div class="col-sm-6">
-                        <strong>Rank</strong>
-                        <ol>
-                            <li>{{ sorted_teams.0.name }} {{ sorted_teams.0.points }}</li>
-                            <li>{{ sorted_teams.1.name }} {{ sorted_teams.1.points }}</li>
-                            <li>{{ sorted_teams.5.name }} {{ sorted_teams.5.points }}</li>
-                        </ol>
-                    </div>
-                </div>
-                <!--  -->
-                <h3>Graph</h3>
-                <div class="row">
-                    <div class="col-sm-8">
-                        <div id="graph"></div>
-                    </div>
-                    <div class="col-sm-4">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>Team ID</th>
-                                    <th>Points</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for team in sorted_teams %}
-                                    <tr class="point">
-                                        <td>{{ team.name }}</td>
-                                        <td>{{team.points}}</td>
-                                    </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <!--  -->
-                <h3>Log</h3>
-                <table class="table table-condensed">
-                    <thead>
+                        <li>點數值總計：{{ totalpoints }}</li>
+                        <ul>
+                            <li>被捕獲總計：{{ totalpointsgot }}</li>
+                        </ul>
+                        <li>目前領先：{{ sorted_teams.0.name }} {{ sorted_teams.0.points }}</li>
+                        <ul>
+                            <li>第二：{{ sorted_teams.1.name }} {{ sorted_teams.1.points }}</li>
+                            <li>倒數：{{ sorted_teams.5.name }} {{ sorted_teams.5.points }}</li>
+                        </ul>
+                    </ul>
+                    <table class="table" style="font-size: 12px;">
                         <tr>
-                            <th>時間</th>
-                            <th>人員</th>
-                            <th>行動類別</th>
-                            <th>詳細資料</th>
-                            <th>取得點數</th>
+                            <th id="tablestyle">時間</th>
+                            <th id="tablestyle">人員</th>
+                            <th id="tablestyle">行動類別</th>
+                            <th id="tablestyle" >詳細資料</th>
+                            <th id="tablestyle" >取得點數</th>
                         </tr>
-                    </thead>
-                    {% for entry in history_entries %}
-                        <tbody>
-                            <tr>
-                                <td id="tablestyle">{{ entry.date | date:'m/d H:i' }}</td>
-                                <td id="tablestyle">{{ entry.user.last_name }} ({{ entry.user.username }})</td>
-                                <td id="tablestyle">{{ entry.action_explain }}</td>
-                                <td id="tablestyle"><a href="{% url 'view card' entry.card.cid %}">{{ entry.card.name }}</a></td>
-                                <td id="tablestyle">{{ entry.card.value }} 點</td>
-                            </tr>
-                        </tbody>
-                    {% endfor %}
-                </table>
-            </div>
-        </div>
-        <script src="/static/js/leaderboard.js"></script>
+                        {% for entry in history_entries %}
+                        <tr>
+                            <td id="tablestyle">{{ entry.date | date:'m/d H:i' }}</td>
+                            <td id="tablestyle">{{ entry.user.last_name }} ({{ entry.user.username }})</td>
+                            <td id="tablestyle">{{ entry.action_explain }}</td>
+                            <td id="tablestyle"><a href="{% url 'view card' entry.card.cid %}">{{ entry.card.name }}</a></td>
+                            <td id="tablestyle">{{ entry.card.value }} 點</td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                    <table class="table">
+                        <tr><td>team id</td><td>points</td></tr>
+                        {% for team in sorted_teams %}
+                        <tr class="point"><td>{{ team.name }}</td><td> {{team.points}}</td></tr>
+                        {% endfor %}
+                    </table>
+                </td>
+            </tr>
+        </table>
+        <script type="text/javascript">
+$(document).ready(function(){
+    //資料
+    var dd = [];
+    $('.point').each(function(){
+        var t_id = $(this).find("td").eq(0).text();
+        var t_point = $(this).find("td").eq(1).text();
+        dd.push({"name": t_id, "point":t_point});
+    });
+    //新增一個SVG，並設定長、寬
+    var svg = d3.select("#graph").append("svg")
+            .attr("width", 600)
+            .attr("height", 600)
+            .append("g")
+            //因為原點座標0,0在左上角，所以必須位移到指定的位置上，
+        //否則會因為在畫圓時，圓心座標在0,0而導致部份圖形被裁切。
+        //位移就是在原本的座標上加上移動的數值。
+        .attr("transform", "translate(250,250)");
+    //定義顏色
+    var color = d3.scale.ordinal()
+              .range(["#2961fc", "#f2d33f", "#9ccf5f", "#3dc6e4", "#8096a4", "#c1628d"]);
+
+    //繪製圖餅圖，必備的三個：
+    //d3.svg.arc()
+    //d3.layout.pie()
+    //.append("path")
+
+    //利用arc來產生圓形的accessor函數，
+    //函數包含有內、外圓的角度起迄，
+    //內、外圓的半徑
+    var arc1 = d3.svg.arc()
+        //設定內、外圓形的半徑大小
+            .outerRadius(200)
+            .innerRadius(100);
+
+       //建立一個layout pie物件，無排序
+       var pie = d3.layout.pie()
+           .value(function(d){ return d.point; })
+            .sort(null) ;
+
+    var g1 = svg.selectAll("g")
+           .data(pie(dd))
+           .enter()
+           .append("g")
+           .attr('class', 'slice');
+           //實際畫圓的方式是以SVG圖形路徑（Path）來繪製
+           g1.append("path")
+           //路徑的部份要設定在d屬性中，所以套入arc1函數，
+           //d3.js會依據資料配合arc1函數產出Path所需的路徑
+               .attr("d", arc1)
+               .style("fill", function(d, i) {
+                 return color(i);
+          });
+     g1.append("text")                                     //add a label to each slice
+                .attr("transform", function(d) {                    //set the label's origin to the center of the arc
+                //we have to make sure to set these before calling arc.centroid
+                return "translate(" + arc1.centroid(d) + ")";        //this gives us a pair of coordinates like [50, 50]
+            })
+            .attr("text-anchor", "middle")                          //center the text on it's origin
+            .attr("font-size", "16px")                          //center the text on it's origin
+            .text(function(d) { return d.data.name + d.data.point; });
+});
+  </script>
     </body>
+</html>
 {% endblock %}
